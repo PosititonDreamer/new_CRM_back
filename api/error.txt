@@ -1,0 +1,534 @@
+Array
+(
+    [present-header-10000] => https://static.tildacdn.com/tild3730-6161-4534-b365-316364313832/test.jpg
+    [present-header-15000] => https://static.tildacdn.com/tild3361-3336-4533-a534-336332393239/test.jpg
+    [present-header-20000] => https://static.tildacdn.com/tild3066-3238-4031-a634-313035626462/test.jpg
+    [Email] => Aleksmerz@yandex.ru
+    [Phone] => +7(902)831-6868
+    [messenger] => Aleksmerz
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30ba531c-000f-5000-8000-190bcda4aeac
+            [orderid] => 1210688134
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Гриб Шиитаке в капсулах
+                            [quantity] => 1
+                            [amount] => 899
+                            [img] => https://static.tildacdn.com/stor6335-3264-4666-b166-666632336431/41236842.jpg
+                            [price] => 899
+                            [sku] => SHMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул = 899 руб.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [amount] => 1170.74
+            [subtotal] => 899
+            [delivery] => CDEK
+            [delivery_price] => 271.74
+            [delivery_fio] => Тест В
+            [delivery_city] => Пермь
+            [delivery_address] => RU: Пункт выдачи заказа: ул. Николая Островского, 93Д (PRM140, Пермь, ул. Николая Островского)614000
+            [delivery_comment] => 
+            [delivery_pickup_id] => PRM140
+            [delivery_zip] => 614000
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Aleksmerz@yandex.ruArray
+(
+    [Email] => glebych3373@gmail.com
+    [Phone] => +7(950)759-4790
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30ba9de6-000f-5000-b000-1a1cafda5654
+            [orderid] => 1178392810
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Premium шляпки красного 2025
+                            [quantity] => 1
+                            [amount] => 3500
+                            [img] => https://static.tildacdn.com/stor3264-3764-4432-b333-323031303036/17079935.jpg
+                            [price] => 3500
+                            [sku] => AMCP100
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Вес
+                                            [variant] => 100 г = 3500 руб.
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Эринацин улучшенный Ежовик гребенчатый
+                            [quantity] => 1
+                            [amount] => 3590
+                            [img] => https://static.tildacdn.com/stor6166-3239-4331-b732-663364653835/29227057.jpg
+                            [price] => 3590
+                            [sku] => EGMD240
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 240 капсул (выгоднее на 1170 р.) = 3590 р.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [promocode] => KNIGHT
+            [discountvalue] => 2%
+            [discount] => 141.8
+            [subtotal] => 7090
+            [amount] => 6948.2
+            [delivery] => Почта России (средний срок доставки 4 дня)
+            [delivery_price] => 0
+            [delivery_fio] => Степанов Олег Глебович
+            [delivery_city] => Воронеж
+            [delivery_address] => RU: 394011, Воронеж, ул Конституции, д. 107
+            [delivery_comment] => 
+            [delivery_zip] => 394011
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Array
+(
+    [Email] => chaikin.d.o@yandex.ru
+    [Phone] => +7(922)147-1080
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30bb2a2d-000f-5001-9000-14ba709538c2
+            [orderid] => 2100418587
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Красный в капсулах 2025 микродозирование
+                            [quantity] => 1
+                            [amount] => 1250
+                            [img] => https://static.tildacdn.com/stor3533-3366-4435-a437-373330636536/58163084.jpg
+                            [price] => 1250
+                            [sku] => AMMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул = 1250 р.
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Кордицепс военный original
+                            [quantity] => 1
+                            [amount] => 999
+                            [img] => https://static.tildacdn.com/stor3536-6134-4230-b766-343831623831/96365408.jpg
+                            [price] => 999
+                            [sku] => EGMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул = 999 р.
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => Array
+                        (
+                            [name] => Гриб Шиитаке в капсулах
+                            [quantity] => 1
+                            [amount] => 899
+                            [img] => https://static.tildacdn.com/stor6335-3264-4666-b166-666632336431/41236842.jpg
+                            [price] => 899
+                            [sku] => SHMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул = 899 руб.
+                                        )
+
+                                )
+
+                        )
+
+                    [3] => Array
+                        (
+                            [name] => Гриб Рейши в капсулах
+                            [quantity] => 1
+                            [amount] => 899
+                            [img] => https://static.tildacdn.com/stor6530-3365-4237-b664-643434373066/53813125.jpg
+                            [price] => 899
+                            [sku] => RMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул
+                                        )
+
+                                )
+
+                        )
+
+                    [4] => Array
+                        (
+                            [name] => Эринацин улучшенный Ежовик гребенчатый, 60 капсул
+                            [quantity] => 1
+                            [amount] => 1190
+                            [img] => https://static.tildacdn.com/stor6166-3239-4331-b732-663364653835/29227057.jpg
+                            [price] => 1190
+                            [sku] => EGMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул на 30 дней = 1190 руб.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [promocode] => KNIGHT
+            [discountvalue] => 2%
+            [discount] => 104.74
+            [subtotal] => 5237
+            [amount] => 5132.26
+            [delivery] => CDEK
+            [delivery_price] => 0
+            [delivery_fio] => Чайкин Дмитрий Олегович
+            [delivery_city] => Екатеринбург
+            [delivery_address] => RU: Пункт выдачи заказа: ул. Чемпионов, 1, 5 (YEKB343, Екатеринбург, ул. Чемпионов)620103
+            [delivery_comment] => 
+            [delivery_pickup_id] => YEKB343
+            [delivery_zip] => 620103
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Array
+(
+    [Email] => arch.kuznetsov@gmail.com
+    [Phone] => +7(912)037-1313
+    [messenger] => telegram: @igorkulman
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30bb5d16-000f-5001-8000-1e944779dadc
+            [orderid] => 1363064337
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Пантерный в капсулах 2025 микродозирование
+                            [quantity] => 1
+                            [amount] => 3300
+                            [img] => https://static.tildacdn.com/stor3034-6438-4635-b138-366637366432/64223500.jpg
+                            [price] => 3300
+                            [sku] => APMD60
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 60 капсул = 3300 руб.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [promocode] => СТАРТ
+            [discountvalue] => 100
+            [discount] => 100
+            [subtotal] => 3300
+            [amount] => 3619
+            [delivery] => CDEK
+            [delivery_price] => 419
+            [delivery_fio] => Игорь Николаевич Кузнецов
+            [delivery_city] => Екатеринбург
+            [delivery_address] => RU: Пункт выдачи заказа: ул. Сурикова, 55 (YEKB371, Екатеринбург, ул. Сурикова)620144
+            [delivery_comment] => 
+            [delivery_pickup_id] => YEKB371
+            [delivery_zip] => 620144
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Array
+(
+    [Email] => aleksmerz@mail.ru
+    [Phone] => +7 (902) 831-68-68
+    [messenger] => @aleksmerz
+    [Комментарий_для_ural-mhmr_shop] => тест
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30bb83a6-000f-5001-8000-1e36044678b7
+            [orderid] => 1774579685
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Красный в капсулах 2025 микродозирование
+                            [quantity] => 1
+                            [amount] => 950
+                            [img] => https://static.tildacdn.com/stor3163-3736-4338-b639-373664366439/23894405.jpg
+                            [price] => 950
+                            [sku] => AMMD30
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 30 капсул (малый курс) = 950 р.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [amount] => 1222.13
+            [subtotal] => 950
+            [delivery] => CDEK
+            [delivery_price] => 272.13
+            [delivery_fio] => Мерзляков Александр Алексеевич
+            [delivery_city] => Пермь
+            [delivery_address] => RU: Пункт выдачи заказа: ул. Серпуховская, 6 (PRM12, Пермь, ул. Серпуховская)614025
+            [delivery_comment] => 
+            [delivery_pickup_id] => PRM12
+            [delivery_zip] => 614025
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Array
+(
+    [present-header-10000] => Красный мухомор, 25 грамм!
+    [Email] => gektor-vektor@yandex.ru
+    [Phone] => +7 (950) 624-25-31
+    [messenger] => https://t.me/Dmitriy_Lapshiin
+    [Комментарий_для_ural-mhmr_shop] => красный мухомор 25 гр
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30bb9cb9-000f-5001-8000-151d8f29b523
+            [orderid] => 1988878770
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Гриб чага крошка/кусочки
+                            [quantity] => 1
+                            [amount] => 1200
+                            [img] => https://static.tildacdn.com/stor3332-3435-4836-b262-363562646335/39494929.png
+                            [price] => 1200
+                            [sku] => CH1000
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем пакета
+                                            [variant] => 1000 грамм (выгоднее на 1300 р) = 1490 руб.
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [option] => Фракция 2
+                                            [variant] => Крошка 1-3 мм
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Капсулы с порошком из майской полыни ЖКТ
+                            [quantity] => 1
+                            [amount] => 3999
+                            [img] => https://static.tildacdn.com/stor6338-3835-4238-b865-663564326530/67409185.jpg
+                            [price] => 3999
+                            [sku] => CP600
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 600 капсул (выгоднее на 33%) = 3999 руб.
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => Array
+                        (
+                            [name] => Капсулы с порошком из пижмы
+                            [quantity] => 1
+                            [amount] => 3999
+                            [img] => https://static.tildacdn.com/stor3233-6637-4135-b639-306262336361/41414256.jpg
+                            [price] => 3999
+                            [sku] => PMD600
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 600 капсул (выгоднее на 33%) = 3999 руб.
+                                        )
+
+                                )
+
+                        )
+
+                    [3] => Array
+                        (
+                            [name] => Кордицепс военный original
+                            [quantity] => 1
+                            [amount] => 4799
+                            [img] => https://static.tildacdn.com/stor3136-3731-4239-a636-396436313932/30302441.jpg
+                            [price] => 4799
+                            [sku] => EGMD360
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Объем банки
+                                            [variant] => 360 капсул (выгоднее на 3201 р.) = 4799 р.
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [amount] => 13997
+            [subtotal] => 13997
+            [delivery] => Почта России (средний срок доставки 4 дня)
+            [delivery_price] => 0
+            [delivery_fio] => Лапшин Дмитрий Викторович
+            [delivery_city] => Нижний Новгород
+            [delivery_address] => RU: 603089, Нижний Новгород, ул Ижорская, д. 50, корп. 3, кв/оф. 32
+            [delivery_comment] => 
+            [delivery_zip] => 603089
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)
+Array
+(
+    [Email] => i.p.a922010@mail.ru
+    [Phone] => +7(999)570-5004
+    [messenger] => telegram
+    [agreement] => yes
+    [payment] => Array
+        (
+            [sys] => yakassa
+            [systranid] => 30bbca6f-000f-5001-8000-16e8aeecb793
+            [orderid] => 1587815795
+            [products] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => Крупные шляпки красного 2025
+                            [quantity] => 1
+                            [amount] => 2200
+                            [img] => https://static.tildacdn.com/stor6161-6337-4463-a639-306633326262/35664858.jpg
+                            [price] => 2200
+                            [sku] => AMCB100
+                            [options] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [option] => Вес
+                                            [variant] => 100г = 2200 рублей
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [amount] => 2560
+            [subtotal] => 2200
+            [delivery] => Яндекс.Доставка
+            [delivery_price] => 360
+            [delivery_fio] => Шаронов Андрей Михайлович 
+            [delivery_city] => Челябинск
+            [delivery_address] => RU: Пункт выдачи заказа: улица Молодогвардейцев, д.12 (Челябинск улица Молодогвардейцев, д.12)454014, Челябинск
+            [delivery_comment] => Шляпки 120 грам
+            [delivery_pickup_id] => 0198ea46989376148107f7d9cb590e3e
+            [delivery_zip] => 454014
+        )
+
+    [formid] => form731825120
+    [formname] => Cart
+    [token] => mhmr27062025
+)

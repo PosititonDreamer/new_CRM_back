@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="4271ba2d-1be0-4feb-901e-c322a98eacfc" name="crm-system" url="http://31.31.196.252">
+        <fileTransfer rootFolder="/www/ural-muhomor.ru" host="31.31.196.252" port="21">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

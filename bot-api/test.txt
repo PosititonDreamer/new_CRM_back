@@ -1,0 +1,139 @@
+Array
+(
+    [update_id] => 878023905
+    [callback_query] => Array
+        (
+            [id] => 4663908636021375242
+            [from] => Array
+                (
+                    [id] => 1085900849
+                    [is_bot] => 
+                    [first_name] => LSN
+                    [language_code] => ru
+                )
+
+            [message] => Array
+                (
+                    [message_id] => 15399
+                    [from] => Array
+                        (
+                            [id] => 7941326159
+                            [is_bot] => 1
+                            [first_name] => Твой помощник URAL-MHMR.SHOP 🍄
+                            [username] => ural_mhmr_shop_bot
+                        )
+
+                    [chat] => Array
+                        (
+                            [id] => 1085900849
+                            [first_name] => LSN
+                            [type] => private
+                        )
+
+                    [date] => 1772550479
+                    [text] => ⬆️ Это наша небольшая брошюра, для удобства её можно распечатать. 
+
+Совсем скоро мы будем печатать ее и вкладывать в посылки обновленную брошюру. Спасибо за интерес к нашей компании 🫱🏼‍🫲🏽💚
+                    [reply_markup] => Array
+                        (
+                            [inline_keyboard] => Array
+                                (
+                                    [0] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => Сайт - для покупки
+                                                    [url] => https://ural-mhmr.shop/
+                                                )
+
+                                        )
+
+                                    [1] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => ПРОМОКОД
+                                                    [callback_data] => give_promo
+                                                )
+
+                                        )
+
+                                    [2] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => Канал
+                                                    [url] => https://t.me/ural_mhmr_shop/2
+                                                )
+
+                                            [1] => Array
+                                                (
+                                                    [text] => Форум
+                                                    [url] => https://t.me/forum_amanita_muscaria
+                                                )
+
+                                            [2] => Array
+                                                (
+                                                    [text] => Оператор
+                                                    [url] => https://t.me/mhmr_shop_operator
+                                                )
+
+                                        )
+
+                                    [3] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => О нас
+                                                    [callback_data] => give_info
+                                                )
+
+                                        )
+
+                                    [4] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => Брошюра
+                                                    [callback_data] => give_book
+                                                )
+
+                                            [1] => Array
+                                                (
+                                                    [text] => Наложка
+                                                    [callback_data] => give_superimposes
+                                                )
+
+                                        )
+
+                                    [5] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => Прочтите отзывы о нас в Яндекс и Telegram
+                                                    [callback_data] => take_reviews
+                                                )
+
+                                        )
+
+                                    [6] => Array
+                                        (
+                                            [0] => Array
+                                                (
+                                                    [text] => Часто задаваемые вопросы
+                                                    [url] => https://ural-mhmr.shop/faq
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [chat_instance] => 952120237516218741
+            [data] => take_reviews
+        )
+
+)
