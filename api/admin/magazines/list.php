@@ -42,6 +42,7 @@ while ($item = mysqli_fetch_assoc($list)) {
         $new_item['list'][$magazine_type][] = [
             "good" => $magazine_item["id_good"],
             "balance" => $magazine_item["balance"],
+            "type_view" => $magazine_item["type_view"],
         ];
     }
 

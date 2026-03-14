@@ -14,7 +14,6 @@ if(strpos($URI, "/admin")){
         $auth = getallheaders()["Authorization"];
         $worker = find_user($connect, $auth);
         if(is_array($worker) && $worker['rule'] == 'Админ') {
-            require_once __DIR__ . "/magazines/check.php";
             include str_replace("/api/", "", $URI);
         } else {
             $req = [
@@ -32,14 +31,13 @@ if(strpos($URI, "/admin")){
     }
 
 } else {
-    if(strpos($URI, "/blank.php") || strpos($URI, "/tilda_api.php") || strpos($URI, "api/workers") || strpos($URI, "api/migrations")){
+    if(strpos($URI, "/blank.php") || strpos($URI, "/tilda_api.php") || strpos($URI, "api/workers") || strpos($URI, "api/magazines") || strpos($URI, "api/scripts")){
         include str_replace("/api/", "", $URI);
     } else {
         if(isset(getallheaders()["Authorization"]) && !empty(getallheaders()["Authorization"])) {
             $auth = getallheaders()["Authorization"];
             $worker = find_user($connect, $auth);
             if(is_array($worker)) {
-                require_once __DIR__ . "/magazines/check.php";
                 include str_replace("/api/", "", $URI);
             }
         } else {
