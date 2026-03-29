@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../connect.php";
 
-$list = mysqli_query($connect, "SELECT * FROM `warehouses` WHERE `hidden` = 0");
+$list = mysqli_query($connect, "SELECT * FROM `warehouses` WHERE `hidden` = 0 ORDER BY `title` ASC");
 
 $list_types = mysqli_query($connect, "SELECT * FROM `warehouses_type`");
 
@@ -13,11 +13,18 @@ while ($item = mysqli_fetch_assoc($list)) {
     $check = mysqli_query($connect, "SELECT * FROM `supplies_warehouse` WHERE (`id_warehouse_receive` = $item_id OR `id_warehouse_give` = $item_id) AND `hidden` = 0 ");
     if(mysqli_num_rows($check) > 0) {
         $count = 0;
+        $active = false;
 
         while($supply = mysqli_fetch_assoc($check)) {
             $supply_id = $supply["id"];
             $count_supplies = mysqli_query($connect, "SELECT * FROM `supplies` WHERE `id_supply_warehouse` = $supply_id AND `id_supply_status` < 3");
-            $count += mysqli_num_rows($count_supplies);
+
+            while($supply_item = mysqli_fetch_assoc($count_supplies)) {
+                if(($supply['id_warehouse_receive'] == $item_id && $supply_item['id_supply_status'] == 2) || ($supply['id_warehouse_receive'] != $item_id && $supply_item['id_supply_status'] == 1)) {
+                    $active = true;
+                }
+                $count += 1;
+            }
         }
 
         $new_list[] = [
@@ -25,8 +32,11 @@ while ($item = mysqli_fetch_assoc($list)) {
             "title" => $item["title"],
             "description" => $item["description"],
             "type" => $item["id_type"],
+            "few" => $item["few"],
+            "few_very" => $item["few_very"],
             "supply" => true,
             "count" => $count,
+            "active" => $active,
         ];
     } else {
         $new_list[] = [
@@ -34,8 +44,11 @@ while ($item = mysqli_fetch_assoc($list)) {
             "title" => $item["title"],
             "description" => $item["description"],
             "type" => $item["id_type"],
+            "few" => $item["few"],
+            "few_very" => $item["few_very"],
             "supply" => false,
-            "count" => 0
+            "count" => 0,
+            "active" => false,
         ];
     }
 }

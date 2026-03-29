@@ -15,7 +15,7 @@ $new_list = [];
 while ($warehouse_item = mysqli_fetch_assoc($list)) {
     $warehouse_id = $warehouse_item['id_warehouse'];
 
-    $item = mysqli_query($connect, "SELECT * FROM `warehouses` WHERE `id` = $warehouse_id ANd `hidden`=0");
+    $item = mysqli_query($connect, "SELECT * FROM `warehouses` WHERE `id` = $warehouse_id ANd `hidden`= 0 ORDER BY `title` ASC");
     $item = mysqli_fetch_assoc($item);
 
     $item_id = $item["id"];
@@ -23,11 +23,18 @@ while ($warehouse_item = mysqli_fetch_assoc($list)) {
 
     if(mysqli_num_rows($check) > 0) {
         $count = 0;
+        $active = false;
 
         while($supply = mysqli_fetch_assoc($check)) {
             $supply_id = $supply["id"];
             $count_supplies = mysqli_query($connect, "SELECT * FROM `supplies` WHERE `id_supply_warehouse` = $supply_id AND `id_supply_status` < 3");
-            $count += mysqli_num_rows($count_supplies);
+
+            while($supply_item = mysqli_fetch_assoc($count_supplies)) {
+                if(($supply['id_warehouse_receive'] == $item_id && $supply_item['id_supply_status'] == 2) || ($supply['id_warehouse_receive'] != $item_id && $supply_item['id_supply_status'] == 1)) {
+                    $active = true;
+                }
+                $count += 1;
+            }
         }
 
         $new_list[] = [
@@ -37,6 +44,8 @@ while ($warehouse_item = mysqli_fetch_assoc($list)) {
             "type" => $item["id_type"],
             "supply" => true,
             "count" => $count,
+            "active" => $active,
+
         ];
     } else {
         $new_list[] = [
@@ -45,7 +54,8 @@ while ($warehouse_item = mysqli_fetch_assoc($list)) {
             "description" => $item["description"],
             "type" => $item["id_type"],
             "supply" => false,
-            "count" => 0
+            "count" => 0,
+            "active" => false,
         ];
     }
 }

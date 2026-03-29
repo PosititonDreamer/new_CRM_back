@@ -8,10 +8,11 @@
             ],
         ],
         [
-//            [
-//                "text" => "Прайс",
-//                "callback_data" => "give_price",
-//            ],
+            [
+                "text" => "Прайс",
+                "callback_data" => "",
+                "url" => "https://ural-mhmr.shop/#products"
+            ],
             [
                 "text" => "ПРОМОКОД",
                 "callback_data" => "give_promo",

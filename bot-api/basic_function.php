@@ -1,6 +1,6 @@
 <?php 
     function sendMessage($getQuery) {
-        $token = "7941326159:AAGQnE2IqhWiVGJCDW-pSSt4DRuXkXqoGm4";
+        $token = "8309707726:AAGwjEWESwPgWMmjaDVmpXMSZOxOVtyv_8g";
         
         $ch = curl_init("https://api.telegram.org/bot". $token ."/sendMessage?" . http_build_query($getQuery));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -11,7 +11,7 @@
     }
 
     function sendDocument($getQuery) {
-        $token = "7941326159:AAGQnE2IqhWiVGJCDW-pSSt4DRuXkXqoGm4";
+        $token = "8309707726:AAGwjEWESwPgWMmjaDVmpXMSZOxOVtyv_8g";
 
         $ch = curl_init('https://api.telegram.org/bot'. $token .'/sendDocument');
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -23,7 +23,7 @@
     }
 
     function deleteMessage($getQuery) {
-        $token = "7941326159:AAGQnE2IqhWiVGJCDW-pSSt4DRuXkXqoGm4";
+        $token = "8309707726:AAGwjEWESwPgWMmjaDVmpXMSZOxOVtyv_8g";
         
         $ch = curl_init("https://api.telegram.org/bot". $token ."/deleteMessage?" . http_build_query($getQuery));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -34,7 +34,7 @@
     }
 
     function checkFollow($getQuery) {
-        $token = "7941326159:AAGQnE2IqhWiVGJCDW-pSSt4DRuXkXqoGm4";
+        $token = "8309707726:AAGwjEWESwPgWMmjaDVmpXMSZOxOVtyv_8g";
         
         $ch = curl_init("https://api.telegram.org/bot". $token ."/getChatMember?" . http_build_query($getQuery));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

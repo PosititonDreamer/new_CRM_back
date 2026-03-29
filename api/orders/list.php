@@ -15,13 +15,13 @@ if($status == 6) {
 } elseif($status == 4) {
     $find_status = $_GET['find_status'];
 
-    $find_text = "orders_process.id_order_status = $find_status";
+    $find_text = "id_order_status = $find_status";
 
     if($find_status == 2) {
-        $find_text = '(orders_process.id_order_status = 2 OR orders_process.id_order_status = 6 OR orders_process.id_order_status = 7)';
+        $find_text = '(id_order_status = 2 OR id_order_status = 6 OR id_order_status = 7)';
     }
 
-    $response = "SELECT orders.id, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, orders_process.date AS date FROM orders JOIN clients_address ON clients_address.id = orders.id_client_address JOIN orders_process ON orders_process.id_order = orders.id AND $find_text WHERE orders.id_order_status = $status";
+    $response = " SELECT  orders.id, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
 } else {
     $response = "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
 }
@@ -31,7 +31,7 @@ if (isset($_GET['date_start']) && $_GET['date_start'] != null) {
     $date_start = $_GET['date_start'];
 
     if($status == 4) {
-        $response .= " AND `orders_process`.`date` >= '$date_start'";
+        $response .= " AND `op`.`date` >= '$date_start'";
     } else {
         $response .= " AND `date` >= '$date_start'";
     }
@@ -41,7 +41,7 @@ if (isset($_GET['date_end']) && $_GET['date_end'] != null) {
     $date_end = $_GET['date_end'];
 
     if($status == 4) {
-        $response .= " AND `orders_process`.`date` <= '$date_end'";
+        $response .= " AND `op`.`date` <= '$date_end'";
     } else {
         $response .= " AND `date` <= '$date_end'";
     }

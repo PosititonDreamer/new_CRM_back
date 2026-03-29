@@ -14,7 +14,7 @@ $time = date("H:i:s");
 foreach ($orders as $order) {
     mysqli_query($connect, "UPDATE `orders` SET `id_order_status`=4 WHERE `id` = $order");
     mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($order,4,'$date', '$time')");
-    mysqli_query($connect, "UPDATE `salaries_assembler` SET `send`= 1 WHERE `id_order` = $order");
+    mysqli_query($connect, "UPDATE `salaries_assembler` SET `send`= 1, `date`= '$date' WHERE `id_order` = $order");
     send_track_mail($connect, $order);
 
     if(file_exists(__DIR__ . "/../../files/$order.pdf")) {

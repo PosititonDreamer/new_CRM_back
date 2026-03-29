@@ -12,7 +12,8 @@ while ($item = mysqli_fetch_assoc($list)) {
         "title" => $item["title"],
         "show_title" => $item["show_title"],
         "client_title" => $item["client_title"],
-        "sort" => $item["sort"]
+        "sort" => $item["sort"],
+        "weight" => $item["weight"],
     ];
 }
 
