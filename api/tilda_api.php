@@ -120,9 +120,9 @@ foreach ($info['products'] as $product) {
     ];
 }
 
-if ($amount >= 10000 && isset($_POST['present-header-10000']) && !filter_var($_POST['present-header-10000'], FILTER_VALIDATE_URL)) {
+if ($amount >= 8000 && isset($_POST['present-header-8000']) && !filter_var($_POST['present-header-8000'], FILTER_VALIDATE_URL)) {
     $products[] = [
-        "title" => $_POST['present-header-10000'],
+        "title" => $_POST['present-header-8000'],
         "quantity" => 1,
         "quantity_good" => null,
         "type" => 'good',
