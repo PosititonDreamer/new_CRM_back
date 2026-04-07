@@ -26,9 +26,9 @@
                 "url" => "https://t.me/ural_mhmr_shop/2"
             ],
             [
-                "text" => "Форум",
+                "text" => "Чат",
                 "callback_data" => "",
-                "url" => "https://t.me/forum_amanita_muscaria"
+                "url" => "https://t.me/ural_mhm_chat"
             ],
             [
                 "text" => "Оператор",
