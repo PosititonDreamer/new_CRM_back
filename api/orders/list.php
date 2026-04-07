@@ -9,9 +9,9 @@ require_once __DIR__ . "/../helpers/check_messages.php";
 $status = $_GET['status'];
 
 if($status == 6) {
-    $response = "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 7)";
+    $response = "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 7)";
 } elseif($status == 3) {
-    $response = "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 3)";
+    $response = "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 3)";
 } elseif($status == 4) {
     $find_status = $_GET['find_status'];
 
@@ -21,9 +21,11 @@ if($status == 6) {
         $find_text = '(id_order_status = 2 OR id_order_status = 6 OR id_order_status = 7)';
     }
 
-    $response = " SELECT  orders.id, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
-} else {
-    $response = "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
+    $response = " SELECT  orders.id,`orders`.`delivered`,`orders`.`keeped`, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
+} else if ($status == 0) {
+    $response = "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `id_order_status` = 4 AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)";
+}else {
+    $response = "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
 }
 
 
@@ -81,7 +83,7 @@ while ($item = mysqli_fetch_assoc($list)) {
     $delivery = $item['delivery'];
     $status = $item['id_order_status'];
 
-    if(!empty(trim($track))) {
+    if(!empty(trim($track) && $_GET['status'] != 0)) {
         if ($delivery == 'Яндекс Доставка') {
             if(strpos($track, 'LO-')) {
                 $track_explode = explode('-', $track);
@@ -130,6 +132,8 @@ while ($item = mysqli_fetch_assoc($list)) {
         "status" => $status,
         "goods" => $length_goods,
         "orders" => $length_orders,
+        "keeped" => $item['keeped'] == 1,
+        "delivered" => $item['delivered'] == 1,
         "quantity" => $quantity['quantity'],
         "blank" => file_exists(__DIR__ . "/../../files/$id.pdf")
     ];

@@ -8,6 +8,7 @@ $orders_send = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_st
 $orders_returned = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 5");
 $orders_assembled_not_track = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 6");
 $orders_assembled_add_track = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 7");
+$orders_delivered = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 4 AND (`delivered` = 0 OR `keeped` = 0)");
 $orders_unprocessed = mysqli_query($connect, "SELECT * FROM `orders_unprocessed`");
 
 $req = [
@@ -20,7 +21,8 @@ $req = [
         "send" => mysqli_num_rows($orders_send),
         "assembled_not_track" => mysqli_num_rows($orders_assembled_not_track),
         "assembled_add_track" => mysqli_num_rows($orders_assembled_add_track),
-        "unprocessed" => mysqli_num_rows($orders_unprocessed)
+        "unprocessed" => mysqli_num_rows($orders_unprocessed),
+        "delivered" => mysqli_num_rows($orders_delivered)
     ]
 ];
 http_response_code(200);
