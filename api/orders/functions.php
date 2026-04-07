@@ -114,7 +114,7 @@ function send_info_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("$email", "$full_name");
+        $mail->addAddress("nulva12344@gmail.com", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -125,8 +125,7 @@ function send_info_mail($connect, $order_id)
         $mail->send();
     } catch (Exception $e) {
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
-        send_error_telegram("Не получилось отправить письмо на email у следующего заказа: ");
-        send_info_telegram($connect, $order_id);
+        send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
     }
 
     $mail = new PHPMailer(true);
@@ -205,7 +204,7 @@ function send_track_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("$email", "$full_name");
+        $mail->addAddress("nulva12344@gmail.com", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -216,8 +215,7 @@ function send_track_mail($connect, $order_id)
         $mail->send();
     } catch (Exception $e) {
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
-        send_error_telegram("Не получилось отправить письмо на email у следующего заказа: ");
-        send_info_telegram($connect, $order_id);
+        send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
     }
 
     $mail = new PHPMailer(true);
@@ -244,7 +242,185 @@ function send_track_mail($connect, $order_id)
     $mail->send();
 }
 
-function send_info_telegram($connect, $order_id)
+function send_delivered_mail($connect, $order_id)
+{
+    $theme = "Посылка уже в пункте выдачи!";
+
+    $message = "Приветствует команда <a href='https://ural-mhmr.shop'>ural-mhmr.shop!</a><br />";
+    $message .= "Ваша посылка успешно добралась до пункта выдачи и ожидает вас.<br /><br />";
+
+    $order = mysqli_query($connect, "SELECT * FROM `orders` WHERE id = $order_id");
+    $order = mysqli_fetch_array($order);
+    $client_id = $order['id_client'];
+    $address_id = $order['id_client_address'];
+    $client = mysqli_query($connect, "SELECT * FROM `clients` WHERE `id` = $client_id");
+    $client = mysqli_fetch_array($client);
+    $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id` = $address_id");
+    $address = mysqli_fetch_array($address);
+
+    $full_name = $client['full_name'];
+    $email = $client['email'];
+    $track = $order['track'];
+    $delivery = $address['delivery'];
+    $address_text = $address['address'];
+
+    $message .= "ТРЕК-НОМЕР ПОСЫЛКИ: ";
+    $message .= "$track<br /><br />";
+    $message .= "$delivery<br />";
+    $message .= "ФИО: $full_name<br />";
+    $message .= "Адрес доставки: $address_text<br />";
+    $message .= "<br />";
+
+    $message .= "*БОНУС: Получите скидку 300 рублей за отзыв о нашей продукции. Оставьте свой отзыв на <a href='https://clck.ru/3GCDzy'>Яндекс</a>, сделайте скриншот отзыва и отправьте его оператору. Взамен получите разовый промокод на скидку для следующей покупки!<br /><br />";
+    $message .= "Наш сайт: <a href='https://ural-mhmr.shop'>ural-mhmr.shop</a><br />";
+    $message .= "Наш новый телеграм-канал: <a href='https://t.me/ural_mhmr_shop'>https://t.me/ural_mhmr_shop</a><br />";
+    $message .= "По всем вопросам пишите нашему оператору: <a href='https://t.me/mhmr_shop_operator'>https://t.me/mhmr_shop_operator</a><br />";
+    $message .= "С уважением, команда интернет-магазина <a href='https://ural-mhmr.shop'>ural-mhmr.shop</a>";
+
+    $mail = new PHPMailer(true);
+    try {
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.mail.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+    } catch (Exception $e) {
+        file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
+        send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
+    }
+
+    $mail = new PHPMailer(true);
+    $mail->CharSet = 'UTF-8';
+    // Настройки SMTP
+    $mail->isSMTP();
+    $mail->Host = 'smtp.mail.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
+    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+    $mail->SMTPSecure = "tls";
+    $mail->Port = 587;
+
+    // Отправитель и получатель
+    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+
+    // Тема и тело письма
+    $mail->isHTML(true);
+    $mail->Subject = $theme;
+    $mail->Body = $message;
+
+    // Отправка письма
+    $mail->send();
+
+    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1 WHERE `id` = $order_id");
+}
+
+function send_keeped_mail($connect, $order_id)
+{
+    $theme = "Срочно заберите посылку!";
+
+    $message = "Приветствует команда <a href='https://ural-mhmr.shop'>ural-mhmr.shop!</a><br />";
+    $message .= "Заканчивается срок хранения вашей посылки, постарайтесь поскорее забрать ее.<br /><br />";
+
+    $order = mysqli_query($connect, "SELECT * FROM `orders` WHERE id = $order_id");
+    $order = mysqli_fetch_array($order);
+    $client_id = $order['id_client'];
+    $address_id = $order['id_client_address'];
+    $client = mysqli_query($connect, "SELECT * FROM `clients` WHERE `id` = $client_id");
+    $client = mysqli_fetch_array($client);
+    $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id` = $address_id");
+    $address = mysqli_fetch_array($address);
+
+    $full_name = $client['full_name'];
+    $email = $client['email'];
+    $track = $order['track'];
+    $delivery = $address['delivery'];
+    $address_text = $address['address'];
+
+    $message .= "ТРЕК-НОМЕР ПОСЫЛКИ: ";
+    $message .= "$track<br /><br />";
+    $message .= "$delivery<br />";
+    $message .= "ФИО: $full_name<br />";
+    $message .= "Адрес доставки: $address_text<br />";
+    $message .= "<br />";
+
+    $message .= "*БОНУС: Получите скидку 300 рублей за отзыв о нашей продукции. Оставьте свой отзыв на <a href='https://clck.ru/3GCDzy'>Яндекс</a>, сделайте скриншот отзыва и отправьте его оператору. Взамен получите разовый промокод на скидку для следующей покупки!<br /><br />";
+    $message .= "Наш сайт: <a href='https://ural-mhmr.shop'>ural-mhmr.shop</a><br />";
+    $message .= "Наш новый телеграм-канал: <a href='https://t.me/ural_mhmr_shop'>https://t.me/ural_mhmr_shop</a><br />";
+    $message .= "По всем вопросам пишите нашему оператору: <a href='https://t.me/mhmr_shop_operator'>https://t.me/mhmr_shop_operator</a><br />";
+    $message .= "С уважением, команда интернет-магазина <a href='https://ural-mhmr.shop'>ural-mhmr.shop</a>";
+
+    $mail = new PHPMailer(true);
+    try {
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'smtp.mail.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+    } catch (Exception $e) {
+        file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
+        send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа:');
+    }
+
+    $mail = new PHPMailer(true);
+    $mail->CharSet = 'UTF-8';
+    // Настройки SMTP
+    $mail->isSMTP();
+    $mail->Host = 'smtp.mail.ru';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
+    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+    $mail->SMTPSecure = "tls";
+    $mail->Port = 587;
+
+    // Отправитель и получатель
+    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+
+    // Тема и тело письма
+    $mail->isHTML(true);
+    $mail->Subject = $theme;
+    $mail->Body = $message;
+
+    // Отправка письма
+    $mail->send();
+
+    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
+}
+
+function send_info_telegram($connect, $order_id, $text = null)
 {
     $order = mysqli_query($connect, "SELECT * FROM `orders` WHERE id = $order_id");
     $order = mysqli_fetch_array($order);
@@ -337,6 +513,12 @@ function send_info_telegram($connect, $order_id)
     ];
 
     $token = "7812122192:AAG9wt_CkT6G_VFZySLz2XjMWXNzrOlj900";
+
+    if($text) {
+        $query['text'] = $text . "\n" . $query['text'];
+        $token = -4933799485;
+    }
+
     $ch = curl_init("https://api.telegram.org/bot" . $token . "/sendMessage?" . http_build_query($query));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
