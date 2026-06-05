@@ -86,8 +86,7 @@ if ($type === 'telegram') {
 
             // Отправитель и получатель
             $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-            $mail->addAddress('nulva1@yandex.ru');
-            $mail->addAddress('aleksmerz@mail.ru');
+            $mail->addAddress('ural.mhmr@gmail.com');
 
             $mail->isHTML(true);
             $mail->Subject = $title;

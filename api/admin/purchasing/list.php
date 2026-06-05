@@ -193,6 +193,7 @@ foreach($other as $good){
 }
 
 $req = [
+    "messages" => ["Список данных успешно получен"],
     "purchasing" =>[
         "date_start" => $date_start,
         "date_end" => $date_end,

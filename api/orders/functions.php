@@ -114,7 +114,7 @@ function send_info_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+        $mail->addAddress("$email", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -141,7 +141,7 @@ function send_info_mail($connect, $order_id)
 
     // Отправитель и получатель
     $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
 
     // Тема и тело письма
     $mail->isHTML(true);
@@ -204,7 +204,7 @@ function send_track_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+        $mail->addAddress("$email", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -231,7 +231,7 @@ function send_track_mail($connect, $order_id)
 
     // Отправитель и получатель
     $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
 
     // Тема и тело письма
     $mail->isHTML(true);
@@ -291,7 +291,7 @@ function send_delivered_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+        $mail->addAddress("$email", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -318,7 +318,7 @@ function send_delivered_mail($connect, $order_id)
 
     // Отправитель и получатель
     $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
 
     // Тема и тело письма
     $mail->isHTML(true);
@@ -380,7 +380,7 @@ function send_keeped_mail($connect, $order_id)
 
         // Отправитель и получатель
         $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-        $mail->addAddress("nulva12344@gmail.com", "$full_name");
+        $mail->addAddress("$email", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -407,7 +407,7 @@ function send_keeped_mail($connect, $order_id)
 
     // Отправитель и получатель
     $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("nulva1@yandex.ru", "$full_name");
+    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
 
     // Тема и тело письма
     $mail->isHTML(true);
