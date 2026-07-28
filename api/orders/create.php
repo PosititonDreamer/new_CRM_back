@@ -37,7 +37,7 @@ if($phone == '+7') {
     $phone = '';
 }
 
-$check = mysqli_query($connect, "SELECT * FROM `orders` WHERE `track`='$track'");
+$check = mysqli_query($connect, "SELECT `id` FROM `orders` WHERE `track`='$track' LIMIT 1");
 
 if(mysqli_num_rows($check) > 0){
     $req = [

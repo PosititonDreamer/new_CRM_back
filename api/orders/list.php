@@ -144,6 +144,7 @@ $req = [
     "messages" => ['Список заказов успешно получен'],
     "orders" => $new_orders,
     "next_page" => $next_page,
+    "count" => $max_length,
 ];
 http_response_code(200);
 echo json_encode($req);

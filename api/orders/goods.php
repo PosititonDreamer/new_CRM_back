@@ -15,6 +15,7 @@ $kits = mysqli_query($connect, "SELECT * FROM `goods_kit`");
 $boxes = mysqli_query($connect, "SELECT * FROM `goods_other` WHERE `id_good_other_type` = 2 AND `id_warehouse` = $id AND `balance` > 0 ORDER BY `goods_other`.`sort` ASC");
 $sales = mysqli_query($connect, "SELECT * FROM `sales` WHERE `date` >= '$date' AND `date_start` <= '$date'");
 $old_sales = mysqli_query($connect, "SELECT * FROM `sales` WHERE `date` < '$date'");
+$presents = mysqli_query($connect, "SELECT `presents`.`id`, `presents`.`id_product_packing`,`products_packing`.`packing`, `products`.`title`, `products`.`show_title`, `measure_units`.`title` AS `measure` FROM `presents` JOIN `products_packing` ON `products_packing`.`id` = `presents`.`id_product_packing` JOIN `products` ON `products`.`id` = `products_packing`.`id_product` JOIN `measure_units` ON `measure_units`.`id` = `products`.`id_measure_unit` ORDER BY `products`.`sort` ASC");
 
 $products_list = [];
 $goods_list = [];
@@ -27,32 +28,15 @@ $presents_list = [
         "title" => "Фирменный магнит",
         "type" => 'other'
     ],
-    [
-        "id" => 34,
-        "title" => "Полынь капсулы, 100 капсул",
-        "type" => 'good'
-    ],
-    [
-        "id" => 32,
-        "title" => "Пижма капсулы, 100 капсул",
-        "type" => 'good'
-    ],
-    [
-        "id" => 27,
-        "title" => "Отборные шляпки красного, 25 грамм",
-        "type" => 'good'
-    ],
-    [
-        "id" => 47,
-        "title" => "Чага крошка 1-3 мм, 100 грамм",
-        "type" => 'good'
-    ],
-    [
-        "id" => 18,
-        "title" => "Иван-чай без добавок",
-        "type" => 'good'
-    ]
 ];
+
+while($present = mysqli_fetch_assoc($presents)) {
+    $presents_list[] = [
+        "id" => $present['id_product_packing'],
+        "title" => ($present['show_title'] ?? $present['title']) . ", " . $present['packing'] . " " . $present['measure'],
+        "type" => 'good'
+    ];
+}
 
 while ($product = mysqli_fetch_assoc($products)) {
     $products_list[] = [

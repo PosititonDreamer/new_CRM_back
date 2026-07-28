@@ -2,11 +2,12 @@
 require_once __DIR__ . "/../connect.php";
 require_once __DIR__ . "/../helpers/check_data.php";
 
-$messages = check_data(['id'], $_POST);
+$messages = check_data(['id', 'worker'], $_POST);
 
 require_once __DIR__ . "/../helpers/check_messages.php";
 
 $id = $_POST['id'];
+$worker = $_POST['worker'];
 $date = date("Y-m-d");
 
 $supply = mysqli_query($connect, "SELECT * FROM `supplies` WHERE `id` = $id");
@@ -17,7 +18,7 @@ $warehouse_receive = mysqli_query($connect, "SELECT `id_warehouse_receive` FROM 
 $warehouse_receive = mysqli_fetch_assoc($warehouse_receive)["id_warehouse_receive"];
 
 mysqli_query($connect, "UPDATE `supplies` SET `id_supply_status` = 3 WHERE `id` = $id");
-mysqli_query($connect, "INSERT INTO `supplies_process`(`id_supply`, `id_supply_process_status`, `date`) VALUES ($id,3,'$date')");
+mysqli_query($connect, "INSERT INTO `supplies_process`(`id_supply`, `id_supply_process_status`, `id_worker`, `date`) VALUES ($id,3, $worker, '$date')");
 
 $list = mysqli_query($connect, "SELECT * FROM `supplies_list` WHERE `id_supply` = $id");
 

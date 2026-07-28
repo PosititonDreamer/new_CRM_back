@@ -29,6 +29,15 @@ if($rule == 2) {
             mysqli_query($connect, "UPDATE `salaries_penalty` SET `ready`= 1 WHERE `id`=$penalty");
         }
     }
+
+    if(isset($_POST['supplies'])) {
+        $supplies = json_decode($_POST['supplies'], true);
+
+        foreach ($supplies as $supply) {
+            mysqli_query($connect, "UPDATE `salaries_assembler_supply` SET `ready`= 1 WHERE `id`= $supply");
+        }
+    }
+
     $req = [
         "messages" => ['Зарплата сборщику успешно выдана']
     ];
