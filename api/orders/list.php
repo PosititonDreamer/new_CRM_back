@@ -79,22 +79,8 @@ while ($item = mysqli_fetch_assoc($list)) {
     $comment = $item['comment'];
     $date = $item['date'];
     $client_id = $item['id_client'];
-    $track = $item['track'];
     $delivery = $item['delivery'];
     $status = $item['id_order_status'];
-
-    if(!empty(trim($track) && $_GET['status'] != 0)) {
-        if ($delivery == 'Яндекс Доставка') {
-            if(strpos($track, 'LO-')) {
-                $track_explode = explode('-', $track);
-                $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-            } else {
-                $track = wordwrap($track, 3, ' ', true);
-            }
-        } else {
-            $track = wordwrap($track, 3, ' ', true);
-        }
-    }
 
     $length_goods = mysqli_query($connect, "SELECT * FROM `orders_good` WHERE `id_order` = $id");
     $length_goods = mysqli_num_rows($length_goods);

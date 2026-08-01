@@ -24,17 +24,6 @@ if($order['id_order_status'] == 6) {
     mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($id,1,'$date', '$time')");
 }
 
-if ($delivery == 'Яндекс Доставка') {
-    if(strpos($track, 'LO-')) {
-        $track_explode = explode('-', $track);
-        $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-    } else {
-        $track = wordwrap($track, 3, ' ', true);
-    }
-} else {
-    $track = wordwrap($track, 3, ' ', true);
-}
-
 $req = [
     "messages" => ['Трек-номер успешно добавлены'],
     "track" => $track,

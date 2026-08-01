@@ -165,17 +165,6 @@ $length_goods = mysqli_num_rows($length_goods);
 $client = mysqli_query($connect, "SELECT * FROM `clients` WHERE `id`= $client_id");
 $client = mysqli_fetch_assoc($client);
 
-if($delivery == 'Яндекс Доставка') {
-    if(strpos($track, 'LO-')) {
-        $track_explode = explode('-', $track);
-        $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-    } else {
-        $track = wordwrap($track, 3, ' ', true);
-    }
-} else {
-    $track = wordwrap($track, 3, ' ', true);
-}
-
 if(!empty($email)) {
     send_info_mail($connect, $id);
 }

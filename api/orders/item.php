@@ -110,19 +110,6 @@ $address = mysqli_fetch_assoc($address);
 $orders_length = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_client` = $client_id");
 $orders_length = mysqli_num_rows($orders_length);
 
-if(!empty(trim($track))) {
-    if ($address['delivery'] == 'Яндекс Доставка') {
-        if(strpos($track, 'LO-')) {
-            $track_explode = explode('-', $track);
-            $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-        } else {
-            $track = wordwrap($track, 3, ' ', true);
-        }
-    } else {
-        $track = wordwrap($track, 3, ' ', true);
-    }
-}
-
 $req = [
     "messages" => ['Информация о заказе успешно получена'],
     "order" => [

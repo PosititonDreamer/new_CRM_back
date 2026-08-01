@@ -77,17 +77,6 @@ while ($order_item = mysqli_fetch_assoc($orders_list)) {
     $track = $order_item["track"];
     $delivery = $order_item["delivery"];
 
-    if ($delivery == 'Яндекс Доставка') {
-        if(strpos($track, 'LO-')) {
-            $track_explode = explode('-', $track);
-            $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-        } else {
-            $track = wordwrap($track, 3, ' ', true);
-        }
-    } else {
-        $track = wordwrap($track, 3, ' ', true);
-    }
-
     $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id`=$address_id");
     $address = mysqli_fetch_assoc($address);
 

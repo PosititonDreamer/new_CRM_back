@@ -23,19 +23,6 @@ if($type == 'track') {
         $delivery = $item['delivery'];
         $status = $item['id_order_status'];
 
-        if(!empty(trim($track))) {
-            if($delivery == 'Яндекс Доставка') {
-                if(strpos($track, 'LO-')) {
-                    $track_explode = explode('-', $track);
-                    $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-                } else {
-                    $track = wordwrap($track, 3, ' ', true);
-                }
-            } else {
-                $track = wordwrap($track, 3, ' ', true);
-            }
-        }
-
         $quantity = mysqli_query($connect, "SELECT SUM(quantity) AS quantity FROM `orders_good` WHERE id_order = $id");
         $quantity = mysqli_fetch_assoc($quantity);
 
@@ -109,19 +96,6 @@ if($type == 'track') {
 
         $length_orders = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_client` = $client_id");
         $length_orders = mysqli_num_rows($length_orders);
-
-        if(!empty(trim($track))) {
-            if($delivery == 'Яндекс Доставка') {
-                if(strpos($track, 'LO-')) {
-                    $track_explode = explode('-', $track);
-                    $track = $track_explode[0] . '-' . wordwrap($track_explode[1], 3, ' ', true);
-                } else {
-                    $track = wordwrap($track, 3, ' ', true);
-                }
-            } else {
-                $track = wordwrap($track, 3, ' ', true);
-            }
-        }
 
         $length_goods = mysqli_query($connect, "SELECT * FROM `orders_good` WHERE `id_order` = $id");
         $length_goods = mysqli_num_rows($length_goods);
