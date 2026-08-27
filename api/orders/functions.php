@@ -105,15 +105,15 @@ function send_info_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.mail.ru';
+        $mail->Host = 'ssl://mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
         // Отправитель и получатель
-        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->setFrom('info@ural-mhmr.shop', 'ural-mhmr.shop');
         $mail->addAddress("$email", "$full_name");
 
         // Тема и тело письма
@@ -127,29 +127,6 @@ function send_info_mail($connect, $order_id)
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
         send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
     }
-
-    $mail = new PHPMailer(true);
-    $mail->CharSet = 'UTF-8';
-    // Настройки SMTP
-    $mail->isSMTP();
-    $mail->Host = 'smtp.mail.ru';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
-    $mail->SMTPSecure = "tls";
-    $mail->Port = 587;
-
-    // Отправитель и получатель
-    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
-
-    // Тема и тело письма
-    $mail->isHTML(true);
-    $mail->Subject = $theme;
-    $mail->Body = $message;
-
-    // Отправка письма
-    $mail->send();
 }
 
 function send_track_mail($connect, $order_id)
@@ -195,10 +172,10 @@ function send_track_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.mail.ru';
+        $mail->Host = 'ssl://mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
@@ -217,29 +194,6 @@ function send_track_mail($connect, $order_id)
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
         send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
     }
-
-    $mail = new PHPMailer(true);
-    $mail->CharSet = 'UTF-8';
-    // Настройки SMTP
-    $mail->isSMTP();
-    $mail->Host = 'smtp.mail.ru';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
-    $mail->SMTPSecure = "tls";
-    $mail->Port = 587;
-
-    // Отправитель и получатель
-    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
-
-    // Тема и тело письма
-    $mail->isHTML(true);
-    $mail->Subject = $theme;
-    $mail->Body = $message;
-
-    // Отправка письма
-    $mail->send();
 }
 
 function send_delivered_mail($connect, $order_id)
@@ -282,10 +236,10 @@ function send_delivered_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.mail.ru';
+        $mail->Host = 'ssl://mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
@@ -304,29 +258,6 @@ function send_delivered_mail($connect, $order_id)
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
         send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа: ');
     }
-
-    $mail = new PHPMailer(true);
-    $mail->CharSet = 'UTF-8';
-    // Настройки SMTP
-    $mail->isSMTP();
-    $mail->Host = 'smtp.mail.ru';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
-    $mail->SMTPSecure = "tls";
-    $mail->Port = 587;
-
-    // Отправитель и получатель
-    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
-
-    // Тема и тело письма
-    $mail->isHTML(true);
-    $mail->Subject = $theme;
-    $mail->Body = $message;
-
-    // Отправка письма
-    $mail->send();
 
     mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1 WHERE `id` = $order_id");
 }
@@ -371,10 +302,10 @@ function send_keeped_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.mail.ru';
+        $mail->Host = 'ssl://mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
+        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
+        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
@@ -393,29 +324,6 @@ function send_keeped_mail($connect, $order_id)
         file_put_contents("message_error_log.txt", print_r($mail->ErrorInfo, true), FILE_APPEND);
         send_info_telegram($connect, $order_id, 'Не получилось отправить письмо на email у следующего заказа:');
     }
-
-    $mail = new PHPMailer(true);
-    $mail->CharSet = 'UTF-8';
-    // Настройки SMTP
-    $mail->isSMTP();
-    $mail->Host = 'smtp.mail.ru';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'noreply@ural-mhmr.shop'; // Ваш email
-    $mail->Password = 'bsNH2vjTwPEyMRbzHcN5'; // Ваш пароль
-    $mail->SMTPSecure = "tls";
-    $mail->Port = 587;
-
-    // Отправитель и получатель
-    $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
-    $mail->addAddress("ural.mhmr@gmail.com", "$full_name");
-
-    // Тема и тело письма
-    $mail->isHTML(true);
-    $mail->Subject = $theme;
-    $mail->Body = $message;
-
-    // Отправка письма
-    $mail->send();
 
     mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
 }
