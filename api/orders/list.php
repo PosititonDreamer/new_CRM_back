@@ -51,7 +51,11 @@ if (isset($_GET['date_end']) && $_GET['date_end'] != null) {
 
 if (isset($_GET['delivery']) && $_GET['delivery'] != null) {
     $delivery = $_GET['delivery'];
-    $response .= " AND `delivery` = '$delivery'";
+    if($delivery == 'Яндекс Доставка') {
+        $response .= " AND (`delivery` = '$delivery' OR `delivery` = '5post(Пятерочка)')";
+    } else {
+        $response .= " AND `delivery` = '$delivery'";
+    }
 }
 
 if (isset($_GET['sort']) && $_GET['sort'] != null) {
@@ -102,6 +106,8 @@ while ($item = mysqli_fetch_assoc($list)) {
         $show_delivery = 'ПТ';
     } elseif($delivery == 'Яндекс Доставка') {
         $show_delivery = 'ЯН';
+    }elseif($delivery == '5post(Пятерочка)') {
+        $show_delivery = '5P';
     } else {
         $show_delivery = 'BB';
     }

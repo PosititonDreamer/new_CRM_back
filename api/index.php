@@ -31,7 +31,7 @@ if(strpos($URI, "/admin")){
     }
 
 } else {
-    if(strpos($URI, "/blank.php") || strpos($URI, "/tilda_api.php") || strpos($URI, "api/workers") || strpos($URI, "api/magazines") || strpos($URI, "api/scripts")){
+    if(strpos($URI, "/blank.php") || strpos($URI, "/tilda_api.php") || strpos($URI, "api/workers") || strpos($URI, "api/magazines") || strpos($URI, "api/scripts") || strpos($URI, "api/test")){
         include str_replace("/api/", "", $URI);
     } else {
         if(isset(getallheaders()["Authorization"]) && !empty(getallheaders()["Authorization"])) {

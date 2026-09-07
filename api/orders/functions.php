@@ -105,16 +105,39 @@ function send_info_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'ssl://mail.hosting.reg.ru';
+        $mail->Host = 'mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
         // Отправитель и получатель
-        $mail->setFrom('info@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
         $mail->addAddress("$email", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+
+        $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'mail.hosting.reg.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
+        $mail->addAddress("archive@ural-muhomor.ru", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -172,16 +195,39 @@ function send_track_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'ssl://mail.hosting.reg.ru';
+        $mail->Host = 'mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
         // Отправитель и получатель
-        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
         $mail->addAddress("$email", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+
+        $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'mail.hosting.reg.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
+        $mail->addAddress("archive@ural-muhomor.ru", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -236,16 +282,39 @@ function send_delivered_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'ssl://mail.hosting.reg.ru';
+        $mail->Host = 'mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
         // Отправитель и получатель
-        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
         $mail->addAddress("$email", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+
+        $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'mail.hosting.reg.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
+        $mail->addAddress("archive@ural-muhomor.ru", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);
@@ -302,16 +371,39 @@ function send_keeped_mail($connect, $order_id)
         $mail->CharSet = 'UTF-8';
         // Настройки SMTP
         $mail->isSMTP();
-        $mail->Host = 'ssl://mail.hosting.reg.ru';
+        $mail->Host = 'mail.hosting.reg.ru';
         $mail->SMTPAuth = true;
-        $mail->Username = 'info@ural-mhmr.shop'; // Ваш email
-        $mail->Password = 'wQ1hJ3oN3kgG7dW8'; // Ваш пароль
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
         $mail->SMTPSecure = "tls";
         $mail->Port = 587;
 
         // Отправитель и получатель
-        $mail->setFrom('noreply@ural-mhmr.shop', 'ural-mhmr.shop');
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
         $mail->addAddress("$email", "$full_name");
+
+        // Тема и тело письма
+        $mail->isHTML(true);
+        $mail->Subject = $theme;
+        $mail->Body = $message;
+
+        // Отправка письма
+        $mail->send();
+
+        $mail = new PHPMailer(true);
+        $mail->CharSet = 'UTF-8';
+        // Настройки SMTP
+        $mail->isSMTP();
+        $mail->Host = 'mail.hosting.reg.ru';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'info@ural-muhomor.ru'; // Ваш email
+        $mail->Password = 'fC3bX0mI6eeV9iG9'; // Ваш пароль
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 587;
+
+        // Отправитель и получатель
+        $mail->setFrom('info@ural-muhomor.ru', 'ural-mhmr.shop');
+        $mail->addAddress("archive@ural-muhomor.ru", "$full_name");
 
         // Тема и тело письма
         $mail->isHTML(true);

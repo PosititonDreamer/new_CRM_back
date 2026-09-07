@@ -22,7 +22,7 @@ if(isset($_GET['id'])) {
             $new_orders[] = $order;
         }
 
-        $orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`number`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE (`orders`.`id_order_status` = 6 OR `orders`.`id_order_status` = 7) AND `clients_address`.`delivery` = 'Яндекс Доставка'");
+        $orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`number`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE (`orders`.`id_order_status` = 6 OR `orders`.`id_order_status` = 7) AND `clients_address`.`delivery` = 'Яндекс Доставка' OR `clients_address`.`delivery` = '5post(Пятерочка)'");
 
         while($order = mysqli_fetch_assoc($orders)){
             $new_orders[] = $order;
@@ -40,7 +40,7 @@ if(isset($_GET['id'])) {
             $new_orders[] = $order;
         }
 
-        $orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`number`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = $status AND `clients_address`.`delivery` = 'Яндекс Доставка'");
+        $orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`number`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = $status AND `clients_address`.`delivery` = 'Яндекс Доставка' OR `clients_address`.`delivery` = '5post(Пятерочка)'");
 
         while($order = mysqli_fetch_assoc($orders)){
             $new_orders[] = $order;

@@ -16,10 +16,6 @@ foreach ($orders as $order) {
     mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($order,4,'$date', '$time')");
     mysqli_query($connect, "UPDATE `salaries_assembler` SET `send`= 1, `date`= '$date' WHERE `id_order` = $order");
     send_track_mail($connect, $order);
-
-    if(file_exists(__DIR__ . "/../../files/$order.pdf")) {
-        unlink(__DIR__ . "/../../files/$order.pdf");
-    }
 }
 
 $req = [
