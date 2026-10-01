@@ -18,6 +18,7 @@ $track = $order['track'];
 $comment = $order['comment'];
 $site_comment = '';
 $number = $order['number'];
+$full_name = $order['full_name'];
 
 $new_status_list = [];
 $new_composition_list = [];
@@ -122,6 +123,7 @@ $req = [
         "composition_list" => $new_composition_list,
         "number" => $number,
         "goods_list" => [],
+        "full_name" => $full_name,
         "client" => [
             "id" => $client['id'],
             "full_name" => $client['full_name'],

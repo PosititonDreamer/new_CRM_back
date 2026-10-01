@@ -5,10 +5,11 @@ require_once __DIR__ . "/../helpers/check_data.php";
 $messages = check_data(['id', 'warehouse', 'client', 'phone', 'address', 'delivery', 'track', 'composition'], $_POST);
 
 require_once __DIR__ . "/../helpers/check_messages.php";
+require_once __DIR__ . '/../clients/functions.php';
 
 $order_id = $_POST['id'];
 $warehouse = $_POST['warehouse'];
-$client = trim($_POST['client']);
+$full_name = trim($_POST['client']);
 $address = $_POST['address'];
 $track = str_replace(" ", "", $_POST['track']);
 $comment = trim($_POST['comment']);
@@ -19,7 +20,7 @@ $date = date("Y-m-d");
 $time = date("H:i:s");
 $composition = json_decode($_POST['composition'], true);
 
-$client_item = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name`='$client'");
+$client_item = mysqli_query($connect, generate_request($full_name, $phone, $email));
 if(mysqli_num_rows($client_item) > 0) {
     $client_item = mysqli_fetch_assoc($client_item);
     $client_id = $client_item['id'];
@@ -108,12 +109,12 @@ if($order['id_order_status'] == 2) {
 if($_POST['payed'] == 'true') {
     $order_number = $order['number'];
     if(empty($order_number)) {
-        mysqli_query($connect, "UPDATE `orders` SET `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = -1 WHERE `id` = $order_id");
+        mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = -1 WHERE `id` = $order_id");
     } else {
-        mysqli_query($connect, "UPDATE `orders` SET `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment' WHERE `id` = $order_id");
+        mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment' WHERE `id` = $order_id");
     }
 } else {
-    mysqli_query($connect, "UPDATE `orders` SET `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = NULL WHERE `id` = $order_id");
+    mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = NULL WHERE `id` = $order_id");
 }
 
 mysqli_query($connect, "DELETE FROM `orders_composition` WHERE `id_order` = $order_id");
@@ -218,6 +219,8 @@ if($delivery == 'CDEK') {
     $show_delivery = 'ПТ';
 } elseif($delivery == 'Яндекс Доставка') {
     $show_delivery = 'ЯН';
+}elseif($delivery == '5post(Пятерочка)') {
+    $show_delivery = '5P';
 } else {
     $show_delivery = 'BB';
 }

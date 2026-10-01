@@ -10,7 +10,7 @@ $type = $_POST['type'];
 $text = $_POST['text'];
 
 if($type == 'track') {
-    $list = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `track` LIKE '%$text%'");
+    $list = mysqli_query($connect, "SELECT `orders`.`full_name`, `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `track` LIKE '%$text%'");
     $new_orders = [];
 
     while ($item = mysqli_fetch_assoc($list)) {
@@ -42,6 +42,8 @@ if($type == 'track') {
             $show_delivery = 'ПТ';
         } elseif($delivery == 'Яндекс Доставка') {
             $show_delivery = 'ЯН';
+        }elseif($delivery == '5post(Пятерочка)') {
+            $show_delivery = '5P';
         } else {
             $show_delivery = 'BB';
         }
@@ -52,6 +54,7 @@ if($type == 'track') {
             "comment" => $comment,
             "date" => $date,
             "client" => $client['full_name'],
+            "full_name" => $item['full_name'],
             "delivery" => $delivery,
             "show_delivery" => $show_delivery,
             "orders" => $length_orders,
@@ -69,12 +72,22 @@ if($type == 'track') {
     http_response_code(200);
     echo json_encode($req);
 } else {
-    $list = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name` LIKE '%$text%'");
+    $list = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name` LIKE '%$text%' OR `email` LIKE '%$text%' OR `phone` LIKE '%$text%'");
+    $list_orders = mysqli_query($connect, "SELECT `id_client` FROM `orders` WHERE `full_name` LIKE '%$text%'");
+
+    $list_id = [];
+    while ($item = mysqli_fetch_assoc($list)) {
+        $list_id[] = $item['id'];
+    }
+    while ($item = mysqli_fetch_assoc($list_orders)) {
+        $list_id[] = $item['id_client'];
+    }
+    $list_id = array_unique($list_id);
+
     $orders = [];
 
-    while ($item = mysqli_fetch_assoc($list)) {
-        $id = $item['id'];
-        $orders_list = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_client` = $id");
+    foreach ($list_id as $id) {
+        $orders_list = mysqli_query($connect, "SELECT `orders`.`full_name`,`orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_client` = $id");
         while ($order = mysqli_fetch_assoc($orders_list)) {
             $orders[] = $order;
         }
@@ -110,6 +123,8 @@ if($type == 'track') {
             $show_delivery = 'ПТ';
         } elseif($delivery == 'Яндекс Доставка') {
             $show_delivery = 'ЯН';
+        }elseif($delivery == '5post(Пятерочка)') {
+            $show_delivery = '5P';
         } else {
             $show_delivery = 'BB';
         }
@@ -119,6 +134,7 @@ if($type == 'track') {
             "track" => $track,
             "comment" => $comment,
             "date" => $date,
+            "full_name" => $item['full_name'],
             "client" => $client['full_name'],
             "delivery" => $delivery,
             "show_delivery" => $show_delivery,

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/connect.php";
 require_once __DIR__ . "/orders/functions.php";
+require_once __DIR__ . "/clients/functions.php";
 http_response_code(200);
 
 if(isset($_GET['check_old'])) {
@@ -86,16 +87,16 @@ foreach ($info['products'] as $product) {
         continue;
     }
 
-     if($name == 'Весы ювелирные') {
-         $products[] = [
-             "title" => $name,
-             "quantity" => $quantity,
-             "quantity_good" => 1,
-             "type" => 'good',
-             "present" => 0
-         ];
-         continue;
-     }
+    if($name == 'Весы ювелирные') {
+        $products[] = [
+            "title" => $name,
+            "quantity" => $quantity,
+            "quantity_good" => 1,
+            "type" => 'good',
+            "present" => 0
+        ];
+        continue;
+    }
 
     if (!isset($product['options'])) {
         $products[] = [
@@ -304,7 +305,7 @@ if(!$next) {
 }
 
 $phone = "+$phone";
-$client_item = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name`='$client'");
+$client_item = mysqli_query($connect, generate_request($full_name, $phone, $email));
 if(mysqli_num_rows($client_item) > 0) {
     $client_item = mysqli_fetch_assoc($client_item);
     $client_id = $client_item['id'];
@@ -335,7 +336,7 @@ if(mysqli_num_rows($client_item) > 0) {
     $address = $address_id;
 }
 
-mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`) VALUES ($warehouse,$client,$address,3,'$track','$number','$comment','$date')");
+mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `full_name`) VALUES ($warehouse,$client,$address,3,'$track','$number','$comment','$date', '$full_name')");
 $order_id = mysqli_insert_id($connect);
 
 

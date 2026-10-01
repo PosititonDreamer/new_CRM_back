@@ -8,11 +8,25 @@ require_once __DIR__ . "/../helpers/check_messages.php";
 
 $text = $_POST['text'];
 
-$list = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name` LIKE '%$text%'");
+$list = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name` LIKE '%$text%' OR `email` LIKE '%$text%' OR `phone` LIKE '%$text%'");
+$list_orders = mysqli_query($connect, "SELECT `id_client` FROM `orders` WHERE `full_name` LIKE '%$text%'");
+
+$list_id = [];
+while ($item = mysqli_fetch_assoc($list)) {
+    $list_id[] = $item['id'];
+}
+while ($item = mysqli_fetch_assoc($list_orders)) {
+    $list_id[] = $item['id_client'];
+}
+
+$list_id = array_unique($list_id);
 
 $new_list = [];
 
-while ($item = mysqli_fetch_assoc($list)) {
+foreach ($list_id as $id) {
+    $item = mysqli_query($connect, "SELECT * FROM `clients` WHERE `id` = $id");
+    $item = mysqli_fetch_assoc($item);
+
     $new_item = [
         "id" => $item["id"],
         "full_name" => $item["full_name"],
@@ -31,7 +45,7 @@ while ($item = mysqli_fetch_assoc($list)) {
         ];
     }
 
-    $orders_list = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_client` = " . $item["id"]);
+    $orders_list = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `orders`.`full_name`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_client` = " . $item["id"]);
 
     while ($order_item = mysqli_fetch_assoc($orders_list)) {
         $order_id = $order_item["id"];
@@ -45,14 +59,30 @@ while ($item = mysqli_fetch_assoc($list)) {
         $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id`=$address_id");
         $address = mysqli_fetch_assoc($address);
 
+        $show_delivery = $delivery;
+        if($delivery == 'CDEK') {
+            $show_delivery = 'CD';
+        } elseif($delivery == 'Почта России') {
+            $show_delivery = 'ПТ';
+        } elseif($delivery == 'Яндекс Доставка') {
+            $show_delivery = 'ЯН';
+        }elseif($delivery == '5post(Пятерочка)') {
+            $show_delivery = '5P';
+        } else {
+            $show_delivery = 'BB';
+        }
+
+
         $new_item["orders"][] = [
             "id" => $order_id,
             "track" => $track,
             "comment" => $order_item['comment'],
             "date" => $order_item['date'],
             "client" => $item["full_name"],
+            "full_name" => $order_item["full_name"],
             "address" => $address['address'],
             "delivery" => $delivery,
+            "show_delivery" => $show_delivery,
             "status" => $order_item['id_order_status'],
             "goods" => $length_goods,
             "blank" => false
@@ -61,6 +91,7 @@ while ($item = mysqli_fetch_assoc($list)) {
 
     $new_list[] = $new_item;
 }
+
 $req = [
     "messages" => ["Получен список клиентов"],
     "clients" => $new_list

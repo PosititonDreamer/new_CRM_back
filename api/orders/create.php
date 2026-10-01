@@ -7,9 +7,10 @@ $messages = check_data(['warehouse', 'client', 'phone', 'address', 'delivery', '
 require_once __DIR__ . "/../helpers/check_messages.php";
 require_once __DIR__ . "/functions.php";
 require_once __DIR__ . "/functions_blank.php";
+require_once __DIR__ . '/../clients/functions.php';
 
 $warehouse = $_POST['warehouse'];
-$client = trim($_POST['client']);
+$full_name = trim($_POST['client']);
 $address = $_POST['address'];
 $track = str_replace(" ", "", $_POST['track']);
 $comment = trim($_POST['comment']);
@@ -48,9 +49,9 @@ if(mysqli_num_rows($check) > 0){
     echo json_encode($req);
     die();
 }
-$client = strtolower(trim($client));
-$client = mb_convert_case($client, MB_CASE_TITLE, "UTF-8");
-$client_item = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name`='$client'");
+$full_name = strtolower(trim($full_name));
+$full_name = mb_convert_case($full_name, MB_CASE_TITLE, "UTF-8");
+$client_item = mysqli_query($connect, generate_request($full_name, $phone, $email));
 if(mysqli_num_rows($client_item) > 0) {
     $client_item = mysqli_fetch_assoc($client_item);
     $client_id = $client_item['id'];
@@ -76,9 +77,9 @@ if(mysqli_num_rows($client_item) > 0) {
     $address = $address_id;
 }
 if($number == -1) {
-    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `id_worker`) VALUES ($warehouse,$client,$address,1,'$track','$number','$comment','$date',$worker)");
+    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `id_worker`, `full_name`) VALUES ($warehouse,$client,$address,1,'$track','$number','$comment','$date',$worker, '$full_name')");
 } else {
-    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `comment`, `date`, `id_worker`) VALUES ($warehouse,$client,$address,1,'$track','$comment','$date',$worker)");
+    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `comment`, `date`, `id_worker`, `full_name`) VALUES ($warehouse,$client,$address,1,'$track','$comment','$date',$worker, '$full_name')");
 }
 $sale = false;
 $order_id = mysqli_insert_id($connect);
@@ -183,11 +184,11 @@ if($delivery == 'CDEK') {
     $show_delivery = 'ПТ';
 } elseif($delivery == 'Яндекс Доставка') {
     $show_delivery = 'ЯН';
+}elseif($delivery == '5post(Пятерочка)') {
+    $show_delivery = '5P';
 } else {
     $show_delivery = 'BB';
 }
-
-
 
 $new_order = [
     "id" => $id,

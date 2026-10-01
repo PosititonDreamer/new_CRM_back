@@ -78,7 +78,7 @@ function send_info_mail($connect, $order_id)
     $address = mysqli_fetch_array($address);
 
     $delivery = $address['delivery'];
-    $full_name = $client['full_name'];
+    $full_name = $order['full_name'];
     $phone = $client['phone'];
     $email = $client['email'];
     $address_text = $address['address'];
@@ -168,7 +168,7 @@ function send_track_mail($connect, $order_id)
     $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id` = $address_id");
     $address = mysqli_fetch_array($address);
 
-    $full_name = $client['full_name'];
+    $full_name = $order['full_name'];
     $email = $client['email'];
     $track = $order['track'];
     $delivery = $address['delivery'];
@@ -258,7 +258,7 @@ function send_delivered_mail($connect, $order_id)
     $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id` = $address_id");
     $address = mysqli_fetch_array($address);
 
-    $full_name = $client['full_name'];
+    $full_name = $order['full_name'];
     $email = $client['email'];
     $track = $order['track'];
     $delivery = $address['delivery'];
@@ -347,7 +347,7 @@ function send_keeped_mail($connect, $order_id)
     $address = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id` = $address_id");
     $address = mysqli_fetch_array($address);
 
-    $full_name = $client['full_name'];
+    $full_name = $order['full_name'];
     $email = $client['email'];
     $track = $order['track'];
     $delivery = $address['delivery'];
@@ -485,7 +485,7 @@ function send_info_telegram($connect, $order_id, $text = null)
     $address = mysqli_fetch_array($address);
 
     $delivery = $address['delivery'];
-    $full_name = $client['full_name'];
+    $full_name = $order['full_name'];
     $phone = $client['phone'];
     $email = $client['email'];
     $address_text = $address['address'];
