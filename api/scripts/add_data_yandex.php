@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../connect.php';
+require_once __DIR__ . "/../orders/functions_blank.php";
 
 $orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`number`,`orders`.`id_order_status`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE (`orders`.`id_order_status` = 3 OR `orders`.`id_order_status` = 6) AND (`clients_address`.`delivery` = '5post(Пятерочка)' OR `clients_address`.`delivery` = 'Яндекс Доставка')");
 
@@ -52,6 +53,7 @@ if(mysqli_num_rows($orders) > 0) {
 
             file_put_contents(__DIR__ . "/../../files/$order_id.pdf", $response);
 
+            transformBlank($order_id);
 
             $date = date("Y-m-d");
             $time = date("H:i:s");

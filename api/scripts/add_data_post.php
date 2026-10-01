@@ -21,51 +21,53 @@ if (mysqli_num_rows($orders) > 0) {
         $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        $info_order = $response[0];
-        $request_id = $info_order['id'];
-        $track = $info_order['barcode'];
+        if(count($response) > 0) {
+            $info_order = $response[0];
+            $request_id = $info_order['id'];
+            $track = $info_order['barcode'];
 
-        mysqli_query($connect, "UPDATE `orders` SET `request_id`='$request_id', `track` = '$track' WHERE `id` = $id");
-        $date = date("Y-m-d");
-        $time = date("H:i:s");
-        if($order_status == 6) {
-            mysqli_query($connect, "UPDATE `orders` SET `id_order_status`=7, `track`='$track' WHERE `id` = $id");
-            mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($id,7,'$date', '$time')");
-        } else {
-            mysqli_query($connect, "UPDATE `orders` SET `id_order_status`=1, `track`='$track' WHERE `id` = $id");
-            mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($id,1,'$date', '$time')");
+            mysqli_query($connect, "UPDATE `orders` SET `request_id`='$request_id', `track` = '$track' WHERE `id` = $id");
+            $date = date("Y-m-d");
+            $time = date("H:i:s");
+            if($order_status == 6) {
+                mysqli_query($connect, "UPDATE `orders` SET `id_order_status`=7, `track`='$track' WHERE `id` = $id");
+                mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($id,7,'$date', '$time')");
+            } else {
+                mysqli_query($connect, "UPDATE `orders` SET `id_order_status`=1, `track`='$track' WHERE `id` = $id");
+                mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($id,1,'$date', '$time')");
+            }
+
+            $ch = curl_init("https://otpravka-api.pochta.ru/1.0/user/shipment?sending-date=$date&use-online-balance=true");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+                $request_id
+            ]));
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization: AccessToken $apiKey",
+                "X-User-Authorization: Basic $auth",
+                'Content-Type: application/json;charset=UTF-8'
+            ]);
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $url = "https://otpravka-api.pochta.ru/1.0/forms/$request_id/f7pdf";
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Authorization: AccessToken $apiKey",
+                "X-User-Authorization: Basic $auth",
+                'Content-Type: application/json;charset=UTF-8'
+            ]);
+
+            $response = curl_exec($ch);
+
+            print_r($response);
+
+            file_put_contents(__DIR__ . "/../../files/$id.pdf", $response);
+            curl_close($ch);
         }
-
-        $ch = curl_init("https://otpravka-api.pochta.ru/1.0/user/shipment?sending-date=$date&use-online-balance=true");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            $request_id
-        ]));
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: AccessToken $apiKey",
-            "X-User-Authorization: Basic $auth",
-            'Content-Type: application/json;charset=UTF-8'
-        ]);
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        $url = "https://otpravka-api.pochta.ru/1.0/forms/$request_id/f7pdf";
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: AccessToken $apiKey",
-            "X-User-Authorization: Basic $auth",
-            'Content-Type: application/json;charset=UTF-8'
-        ]);
-
-        $response = curl_exec($ch);
-
-        print_r($response);
-
-        file_put_contents(__DIR__ . "/../../files/$id.pdf", $response);
-        curl_close($ch);
     }
 }

@@ -6,6 +6,7 @@ $messages = check_data(['warehouse', 'client', 'phone', 'address', 'delivery', '
 
 require_once __DIR__ . "/../helpers/check_messages.php";
 require_once __DIR__ . "/functions.php";
+require_once __DIR__ . "/functions_blank.php";
 
 $warehouse = $_POST['warehouse'];
 $client = trim($_POST['client']);
@@ -185,6 +186,8 @@ if($delivery == 'CDEK') {
 } else {
     $show_delivery = 'BB';
 }
+
+
 
 $new_order = [
     "id" => $id,

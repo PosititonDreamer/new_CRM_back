@@ -148,13 +148,17 @@ foreach($consumable as $good){
     $good_item = mysqli_fetch_assoc($good_item);
     if(isset($consumable_list[$good_item['title']])) {
         $consumable_list[$good_item['title']]['expense'] += $quantity;
-        $consumable_list[$good_item['title']]['actual'] += $good_item['balance'];
-
     } else {
+        $title = $good_item['title'];
+        $sum_balance = mysqli_query($connect, "SELECT SUM(balance) AS total_balance FROM goods_consumable WHERE `title` = '$title'");
+        $actual = 0;
+        if(mysqli_num_rows($sum_balance) > 0) {
+            $actual = mysqli_fetch_assoc($sum_balance)['total_balance'];
+        }
         $consumable_list[$good_item['title']] = [
             'title' => $good_item['title'],
             'expense' => $quantity,
-            'actual' => $good_item['balance'],
+            'actual' => $actual,
         ];
     }
 }
@@ -181,13 +185,17 @@ foreach($other as $good){
     $good_item = mysqli_fetch_assoc($good_item);
     if(isset($other_list[$good_item['title']])) {
         $other_list[$good_item['title']]['expense'] += $quantity;
-        $other_list[$good_item['title']]['actual'] += $good_item['balance'];
-
     } else {
+        $title = $good_item['title'];
+        $sum_balance = mysqli_query($connect, "SELECT SUM(balance) AS total_balance FROM goods_other WHERE `title` = '$title'");
+        $actual = 0;
+        if(mysqli_num_rows($sum_balance) > 0) {
+            $actual = mysqli_fetch_assoc($sum_balance)['total_balance'];
+        }
         $other_list[$good_item['title']] = [
             'title' => $good_item['title'],
             'expense' => $quantity,
-            'actual' => $good_item['balance'],
+            'actual' => $actual,
         ];
     }
 }

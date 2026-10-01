@@ -28,8 +28,8 @@ if (isset($_POST['messenger'])) {
     $messenger = $_POST['messenger'];
 }
 
-if (isset($_POST['Комментарий_для_ural-mhmr_shop'])) {
-    $comment .= $_POST['Комментарий_для_ural-mhmr_shop'] . "\n";
+if (isset($_POST['Комментарий_для_акции_или_сборщика'])) {
+    $comment .= $_POST['Комментарий_для_акции_или_сборщика'] . "\n";
 }
 
 $info = $_POST['payment'];
@@ -41,10 +41,12 @@ if (str_contains($delivery, "CDEK")) {
     $delivery = "CDEK";
 } elseif(str_contains($delivery, "Почта России")) {
     $delivery = "Почта России";
-} elseif(str_contains($delivery, "Яндекс.Доставка")) {
+} elseif(str_contains($delivery, "Яндекс")) {
     $delivery = "Яндекс Доставка";
 } elseif (str_contains($delivery, "Boxberry")) {
     $delivery = "Boxberry";
+}elseif (str_contains($delivery, "Пятерочка")) {
+    $delivery = "5post(Пятерочка)";
 }
 
 $amount = $info['amount'];
@@ -274,6 +276,7 @@ if(!$next) {
     if(isset($id_unprocessed)) {
         $message = "Нет возможности перебить заказ:\n\n" . $message;
         send_error_telegram($message);
+        file_put_contents(__DIR__ . "/order-error.txt", $message);
     } else {
         $data = json_encode($_POST, JSON_UNESCAPED_UNICODE);
         mysqli_query($connect, "INSERT INTO `orders_unprocessed`(`data`) VALUES ('$data')");
