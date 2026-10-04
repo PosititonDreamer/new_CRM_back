@@ -14,11 +14,12 @@ $client_title = $_POST["client_title"];
 $show_title = $_POST["show_title"] ?? '';
 $sort = $_POST["sort"];
 $weight = $_POST["weight"];
+$instruction = trim($_POST["instruction"]);
 
 $check = find_product_title($connect, $title);
 if ($check) {
     if ($check['id'] == $id) {
-        mysqli_query($connect, "UPDATE `products` SET `id_measure_unit`=$measure_unit,`title`='$title',`show_title`='$show_title',`sort`=$sort,`weight`=$weight, `client_title` = '$client_title' WHERE `id` = '$id'");
+        mysqli_query($connect, "UPDATE `products` SET `id_measure_unit`=$measure_unit,`title`='$title',`show_title`='$show_title',`sort`=$sort,`weight`=$weight, `client_title` = '$client_title', `instruction` = '$instruction' WHERE `id` = '$id'");
         $req = [
             'messages' => ["Продукт успешно изменен"],
             'product' => [
@@ -29,6 +30,7 @@ if ($check) {
                 'client_title' => $client_title,
                 'sort' => $sort,
                 'weight' => $weight,
+                'instruction' => $instruction,
             ]
         ];
         http_response_code(200);
@@ -41,7 +43,7 @@ if ($check) {
         echo json_encode($req);
     }
 } else {
-    mysqli_query($connect, "UPDATE `products` SET `id_measure_unit`=$measure_unit,`title`='$title',`show_title`='$show_title',`sort`=$sort,`weight`=$weight , `client_title` = '$client_title' WHERE `id` = '$id'");
+    mysqli_query($connect, "UPDATE `products` SET `id_measure_unit`=$measure_unit,`title`='$title',`show_title`='$show_title',`sort`=$sort,`weight`=$weight , `client_title` = '$client_title', `instruction` = '$instruction' WHERE `id` = '$id'");
     $req = [
         'messages' => ["Продукт успешно изменен"],
         'product' => [
@@ -52,6 +54,7 @@ if ($check) {
             'client_title' => $client_title,
             'sort' => $sort,
             'weight' => $weight,
+            'instruction' => $instruction,
         ]
     ];
     http_response_code(200);

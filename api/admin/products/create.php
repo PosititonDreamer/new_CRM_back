@@ -12,6 +12,7 @@ $title = $_POST["title"];
 $client_title = $_POST["client_title"];
 $weight = $_POST["weight"];
 $show_title = $_POST["show_title"] ?? '';
+$instruction = trim($_POST["instruction"]);
 
 $check = find_product_title($connect,$title);
 if ($check) {
@@ -27,7 +28,7 @@ if ($check) {
         $last = mysqli_fetch_assoc($last);
         $sort = floor($last["sort"] / 100) * 100 + 100;
     }
-    mysqli_query($connect, "INSERT INTO `products`(`id_measure_unit`, `title`, `show_title`, `client_title`, `sort`, `weight`, `hidden`) VALUES ($measure_unit,'$title','$show_title', '$client_title' ,$sort, $weight, 0)");
+    mysqli_query($connect, "INSERT INTO `products`(`id_measure_unit`, `title`, `show_title`, `client_title`, `instruction`, `sort`, `weight`, `hidden`) VALUES ($measure_unit,'$title','$show_title', '$client_title', '$instruction' ,$sort, $weight, 0)");
     $last_id = mysqli_insert_id($connect);
     $req = [
         'messages' => ["Продукт успешно добавлен"],
@@ -39,6 +40,7 @@ if ($check) {
             'client_title' => $client_title,
             'sort' => $sort,
             'weight' => $weight,
+            'instruction' => $instruction,
         ]
     ];
     http_response_code(200);

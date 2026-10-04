@@ -7,6 +7,41 @@ require __DIR__ . '/../libraries/PHPMailer/src/Exception.php';
 require __DIR__ . '/../libraries/PHPMailer/src/PHPMailer.php';
 require __DIR__ . '/../libraries/PHPMailer/src/SMTP.php';
 
+function forming_instructions($connect, $order_id) {
+    $goods = mysqli_query($connect, "SELECT * FROM `orders_good` WHERE `id_order` = '$order_id' AND `id_order_good_type` = 1");
+
+    if(mysqli_num_rows($goods) > 0) {
+        $products = [];
+        while($good = mysqli_fetch_assoc($goods)) {
+            $good_id = $good['id_good'];
+            $good_item = mysqli_query($connect, "SELECT `id_product` FROM `goods` WHERE `id` = $good_id");
+            if(mysqli_num_rows($good_item) > 0) {
+                $products[] = mysqli_fetch_assoc($good_item)['id_product'];
+            }
+        }
+        $products = array_unique($products);
+        if(count($products) > 0) {
+            $products = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` IN (" . join(', ', $products) . ") ORDER BY `products`.`sort` ASC");
+            $final_instruction = '';
+
+            while($product = mysqli_fetch_assoc($products)) {
+                if(!empty($product['instruction'])) {
+                    $title = $product['client_title'];
+                    $instruction = $product['instruction'];
+                    $final_instruction .= "<b>$title</b><br>$instruction<br><br>";
+                }
+            }
+            if(!empty(trim($final_instruction))) {
+                return $final_instruction;
+            }
+
+            return null;
+        }
+        return null;
+    }
+    return null;
+}
+
 function send_info_mail($connect, $order_id)
 {
     $theme = "Новый заказ на сайте ural-mhmr.shop";

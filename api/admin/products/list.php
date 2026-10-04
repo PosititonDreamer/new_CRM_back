@@ -14,6 +14,8 @@ while ($item = mysqli_fetch_assoc($list)) {
         "client_title" => $item["client_title"],
         "sort" => $item["sort"],
         "weight" => $item["weight"],
+        'instruction' => $item['instruction'],
+
     ];
 }
 
