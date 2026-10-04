@@ -232,6 +232,7 @@ $new_order = [
     "sale" => $sale,
     "date" => $date,
     "client" => $client['full_name'],
+    "full_name" => $full_name,
     "delivery" => $delivery,
     "show_delivery" => $show_delivery,
     "status" => $status,

@@ -69,7 +69,7 @@ if(mysqli_num_rows($client_item) > 0) {
         $address = $address_id;
     }
 } else {
-    mysqli_query($connect, "INSERT INTO `clients`(`full_name`, `phone`, `email`, `messenger`) VALUES ('$client','$phone','$email', '')");
+    mysqli_query($connect, "INSERT INTO `clients`(`full_name`, `phone`, `email`, `messenger`) VALUES ('$full_name','$phone','$email', '')");
     $client_id = mysqli_insert_id($connect);
     mysqli_query($connect, "INSERT INTO `clients_address`(`id_client`, `address`, `delivery`) VALUES ($client_id,'$address','$delivery')");
     $address_id = mysqli_insert_id($connect);
@@ -197,6 +197,7 @@ $new_order = [
     "sale" => $sale,
     "date" => $date,
     "client" => $client['full_name'],
+    "full_name" => $full_name,
     "delivery" => $delivery,
     "show_delivery" => $show_delivery,
     "status" => $status,
