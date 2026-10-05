@@ -44,6 +44,8 @@ if(mysqli_num_rows($orders) > 0){
             $last_status = $html['entity']['statuses'][0];
 
             if($last_status['code'] === 'DELIVERED') {
+                // todo: Добавить здесь обработку писем
+                $last_date = explode('T', $last_status['date_time'])[0];
                 mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                 continue;
             }
@@ -133,6 +135,8 @@ if (mysqli_num_rows($orders) > 0) {
             if (!isset($order_info['code'])) {
                 $status = $order_info['state']['status'];
                 if ($status == 'DELIVERY_DELIVERED') {
+                    // todo: Добавить здесь обработку писем
+                    $last_date = explode('T', $status['timestamp'])[0];
                     mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                     continue;
                 }
@@ -248,6 +252,7 @@ if (mysqli_num_rows($orders) > 0) {
                 if ($name == 'Возврат' || $name == 'Вручение') {
                     mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                     file_put_contents(__DIR__ . '/../error-api.txt', "confirm-$track");
+                    file_put_contents(__DIR__ . '/../data_post-api.txt', print_r($operation['OperationParameters']['OperType']), FILE_APPEND);
                     $next = false;
                 }
             }
