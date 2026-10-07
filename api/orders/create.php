@@ -7,7 +7,7 @@ $messages = check_data(['warehouse', 'client', 'phone', 'address', 'delivery', '
 require_once __DIR__ . "/../helpers/check_messages.php";
 require_once __DIR__ . "/functions.php";
 require_once __DIR__ . "/functions_blank.php";
-//require_once __DIR__ . "/functions_mail.php";
+require_once __DIR__ . "/functions_mail.php";
 require_once __DIR__ . '/../clients/functions.php';
 
 $warehouse = $_POST['warehouse'];
@@ -169,8 +169,7 @@ $client = mysqli_query($connect, "SELECT * FROM `clients` WHERE `id`= $client_id
 $client = mysqli_fetch_assoc($client);
 
 if(!empty($email)) {
-    send_info_mail($connect, $id);
-//    start_mails($connect, $id);
+    start_mails($connect, $id);
 }
 
 $quantity = mysqli_query($connect, "SELECT SUM(quantity) AS quantity FROM `orders_good` WHERE id_order = $id");

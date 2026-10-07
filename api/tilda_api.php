@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/connect.php";
 require_once __DIR__ . "/orders/functions.php";
-//require_once __DIR__ . "/orders/functions_mail.php";
+require_once __DIR__ . "/orders/functions_mail.php";
 require_once __DIR__ . "/clients/functions.php";
 http_response_code(200);
 
@@ -417,8 +417,7 @@ foreach ($goods as $comp) {
 }
 mysqli_query($connect, "INSERT INTO `orders_process`(`id_order`, `id_order_status`, `date`, `time`) VALUES ($order_id,3,'$date', '$time')");
 
-send_info_mail($connect, $order_id);
-//start_mails($connect, $order_id);
+start_mails($connect, $order_id);
 
 if($delivery == 'CDEK') {
     require_once __DIR__ . "/orders/find_track.php";

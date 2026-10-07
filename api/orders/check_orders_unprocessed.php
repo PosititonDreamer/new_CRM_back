@@ -8,7 +8,7 @@ $orders_send = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_st
 $orders_returned = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 5");
 $orders_assembled_not_track = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 6");
 $orders_assembled_add_track = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 7");
-$orders_delivered = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id_order_status` = 4 AND (`delivered` = 0 OR `keeped` = 0)");
+$orders_delivered = mysqli_query($connect, "SELECT DISTINCT `orders_mail`.`id_order` FROM `orders_mail` JOIN `orders` ON `orders`.`id` = `orders_mail`.`id_order` WHERE `orders`.`id_order_status` = 4");
 $orders_unprocessed = mysqli_query($connect, "SELECT * FROM `orders_unprocessed`");
 
 $req = [

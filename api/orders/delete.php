@@ -11,6 +11,7 @@ $id = $_POST['id'];
 mysqli_query($connect, "DELETE FROM `orders` WHERE `id`=$id");
 mysqli_query($connect, "DELETE FROM `orders_good` WHERE `id_order`=$id");
 mysqli_query($connect, "DELETE FROM `orders_process` WHERE `id_order`=$id");
+mysqli_query($connect, "DELETE FROM `orders_mail` WHERE `id_order`=$id");
 
 $req = [
     "messages" => ['Заказ успешно удален']

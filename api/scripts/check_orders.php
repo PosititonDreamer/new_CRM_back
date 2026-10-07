@@ -1,6 +1,13 @@
 <?php
 require_once __DIR__ . '/../connect.php';
-require_once __DIR__ . '/../orders/functions.php';
+require_once __DIR__ . '/../orders/functions_mail.php';
+
+$orders_add_mails = [];
+$interval_3 = new DateInterval('P3D');
+$interval_7 = new DateInterval('P7D');
+$interval_21 = new DateInterval('P21D');
+$interval_30 = new DateInterval('P30D');
+
 // todo:: CDEK
 $orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`track`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND `clients_address`.`delivery` = 'CDEK' AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)");
 
@@ -45,8 +52,29 @@ if(mysqli_num_rows($orders) > 0){
 
             if($last_status['code'] === 'DELIVERED') {
                 // todo: Добавить здесь обработку писем
-                $last_date = explode('T', $last_status['date_time'])[0];
-                mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
+                send_mail($connect, $order_id, 'order_received');
+                $last_date_status = explode('T', $last_status['date_time'])[0];
+                $start = new DateTime("$last_date_status");
+                $orders_add_mails[] = [
+                    'order_id' => $order_id,
+                    'type_mail' => 'order_after_3_days_received',
+                    'date' => $start->add($interval_3)->format('Y-m-d')
+                ];
+                $orders_add_mails[] = [
+                    'order_id' => $order_id,
+                    'type_mail' => 'order_after_7_days_received',
+                    'date' => $start->add($interval_7)->format('Y-m-d')
+                ];
+                $orders_add_mails[] = [
+                    'order_id' => $order_id,
+                    'type_mail' => 'order_after_21_days_received',
+                    'date' => $start->add($interval_21)->format('Y-m-d')
+                ];
+                $orders_add_mails[] = [
+                    'order_id' => $order_id,
+                    'type_mail' => 'order_after_30_days_received',
+                    'date' => $start->add($interval_30)->format('Y-m-d')
+                ];
                 continue;
             }
 
@@ -60,13 +88,20 @@ if(mysqli_num_rows($orders) > 0){
                     $days++;
                 }
 
+
                 if($order['delivered'] == 0 && $days > 3) {
-                    send_delivered_mail($connect, $order_id);
+                    send_mail($connect, $order_id, 'order_delivered');
+                    $start = new DateTime("$date");
+                    $orders_add_mails[] = [
+                      'order_id' => $order_id,
+                      'type_mail' => 'order_after_1_days_delivered',
+                      'date' => $start->add($interval)->format('Y-m-d')
+                    ];
                     continue;
                 }
 
                 if($order['keeped'] == 0 && $days <= 3) {
-                    send_keeped_mail($connect, $order_id);
+                    send_mail($connect, $order_id, 'order_keep');
                 }
             }
         }
@@ -134,10 +169,32 @@ if (mysqli_num_rows($orders) > 0) {
 
             if (!isset($order_info['code'])) {
                 $status = $order_info['state']['status'];
+
                 if ($status == 'DELIVERY_DELIVERED') {
                     // todo: Добавить здесь обработку писем
-                    $last_date = explode('T', $status['timestamp'])[0];
-                    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
+                    $last_date_status = explode('T', $status['timestamp'])[0];
+                    $start = new DateTime("$last_date_status");
+                    $orders_add_mails[] = [
+                        'order_id' => $order_id,
+                        'type_mail' => 'order_after_3_days_received',
+                        'date' => $start->add($interval_3)->format('Y-m-d')
+                    ];
+                    $orders_add_mails[] = [
+                        'order_id' => $order_id,
+                        'type_mail' => 'order_after_7_days_received',
+                        'date' => $start->add($interval_7)->format('Y-m-d')
+                    ];
+                    $orders_add_mails[] = [
+                        'order_id' => $order_id,
+                        'type_mail' => 'order_after_21_days_received',
+                        'date' => $start->add($interval_21)->format('Y-m-d')
+                    ];
+                    $orders_add_mails[] = [
+                        'order_id' => $order_id,
+                        'type_mail' => 'order_after_30_days_received',
+                        'date' => $start->add($interval_30)->format('Y-m-d')
+                    ];
+                    send_mail($connect, $order_id, 'order_received');
                     continue;
                 }
 
@@ -165,17 +222,24 @@ if (mysqli_num_rows($orders) > 0) {
                     }
 
                     if ($order['delivered'] == 0 && $days > 3) {
-                        send_delivered_mail($connect, $order_id);
+                        send_mail($connect, $order_id, 'order_delivered');
+                        $start = new DateTime("$date");
+                        $orders_add_mails[] = [
+                            'order_id' => $order_id,
+                            'type_mail' => 'order_after_1_days_delivered',
+                            'date' => $start->add($interval)->format('Y-m-d')
+                        ];
                         continue;
                     }
 
                     if ($order['keeped'] == 0 && $days <= 3) {
-                        send_keeped_mail($connect, $order_id);
+                        send_mail($connect, $order_id, 'order_keep');
                     }
                 }
             }
         } else {
             mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
+            mysqli_query($connect, "DELETE FROM `orders_mail` WHERE `id_order` = $order_id ");
         }
     }
 }
@@ -248,11 +312,42 @@ if (mysqli_num_rows($orders) > 0) {
         if(count($result['operations']) > 0) {
             $next = true;
             foreach ($result['operations'] as $operation) {
-                $name = $operation['OperationParameters']['OperType']['Name'];
-                if ($name == 'Возврат' || $name == 'Вручение') {
-                    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
-                    file_put_contents(__DIR__ . '/../error-api.txt', "confirm-$track");
-                    file_put_contents(__DIR__ . '/../data_post-api.txt', print_r($operation['OperationParameters']['OperType']), FILE_APPEND);
+                if(isset($operation['OperationParameters']) && isset($operation['OperationParameters']['OperType']) && isset($operation['OperationParameters']['OperType']['Name'])) {
+                    $name = $operation['OperationParameters']['OperType']['Name'];
+                    if ($name == 'Возврат' || $name == 'Вручение') {
+                        file_put_contents(__DIR__ . '/../error-api.txt', "confirm-$track\n", FILE_APPEND);
+                        file_put_contents(__DIR__ . '/../data_post-api.txt', print_r($operation['OperationParameters']['OperType'], true), FILE_APPEND);
+                        $next = false;
+                        if($name == 'Вручение') {
+                            send_mail($connect, $order_id, 'order_received');
+                            $last_date_status = explode('T', $operation['OperationParameters']['OperDate'])[0];
+                            $start = new DateTime("$last_date_status");
+                            $orders_add_mails[] = [
+                                'order_id' => $order_id,
+                                'type_mail' => 'order_after_3_days_received',
+                                'date' => $start->add($interval_3)->format('Y-m-d')
+                            ];
+                            $orders_add_mails[] = [
+                                'order_id' => $order_id,
+                                'type_mail' => 'order_after_7_days_received',
+                                'date' => $start->add($interval_7)->format('Y-m-d')
+                            ];
+                            $orders_add_mails[] = [
+                                'order_id' => $order_id,
+                                'type_mail' => 'order_after_21_days_received',
+                                'date' => $start->add($interval_21)->format('Y-m-d')
+                            ];
+                            $orders_add_mails[] = [
+                                'order_id' => $order_id,
+                                'type_mail' => 'order_after_30_days_received',
+                                'date' => $start->add($interval_30)->format('Y-m-d')
+                            ];
+                        } else {
+                            send_mail($connect, $order_id, 'order_back');
+                        }
+                    }
+
+                } else {
                     $next = false;
                 }
             }
@@ -260,21 +355,63 @@ if (mysqli_num_rows($orders) > 0) {
                 $lastOperation = $result['operations'][count($result['operations'])-1];
                 $name = $lastOperation['OperationParameters']['OperType']['Name'];
                 $description = $lastOperation['OperationParameters']['OperAttr']['Name'];
+
                 if ($name == 'Возврат' || $name == 'Вручение') {
                     mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                     file_put_contents(__DIR__ . '/../error-api.txt', "confirm-$track\n", FILE_APPEND);
+                    file_put_contents(__DIR__ . '/../data_post-api.txt', print_r($operation['OperationParameters']['OperType'], true), FILE_APPEND);
+
+                    if($name == 'Вручение') {
+                        send_mail($connect, $order_id, 'order_received');
+                        $last_date_status = explode('T', $lastOperation['OperationParameters']['OperDate'])[0];
+                        $start = new DateTime("$last_date_status");
+                        $orders_add_mails[] = [
+                            'order_id' => $order_id,
+                            'type_mail' => 'order_after_3_days_received',
+                            'date' => $start->add($interval_3)->format('Y-m-d')
+                        ];
+                        $orders_add_mails[] = [
+                            'order_id' => $order_id,
+                            'type_mail' => 'order_after_7_days_received',
+                            'date' => $start->add($interval_7)->format('Y-m-d')
+                        ];
+                        $orders_add_mails[] = [
+                            'order_id' => $order_id,
+                            'type_mail' => 'order_after_21_days_received',
+                            'date' => $start->add($interval_21)->format('Y-m-d')
+                        ];
+                        $orders_add_mails[] = [
+                            'order_id' => $order_id,
+                            'type_mail' => 'order_after_30_days_received',
+                            'date' => $start->add($interval_30)->format('Y-m-d')
+                        ];
+                    } else {
+                        send_mail($connect, $order_id, 'order_back');
+                    }
                 } else if ($order['delivered'] == 0 && $name == 'Обработка' &&  ($description == 'Прибыло в место вручения' || $description == 'Прибыло в почтомат')) {
-                    send_delivered_mail($connect, $order_id);
-                    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1 WHERE `id` = $order_id");
+                    send_mail($connect, $order_id, 'order_delivered');
                     file_put_contents(__DIR__ . '/../error-api.txt', "delivered-$track\n", FILE_APPEND);
+                    $date = date("Y-m-d");
+                    $start = new DateTime("$date");
+                    $interval = new DateInterval('P1D');
+                    $orders_add_mails[] = [
+                        'order_id' => $order_id,
+                        'type_mail' => 'order_after_1_days_delivered',
+                        'date' => $start->add($interval)->format('Y-m-d')
+                    ];
                 } else if ($order['keeped'] == 0 && $name == 'Обработка' && str_contains($description, 'Истекает срок хранения')) {
-                    send_keeped_mail($connect, $order_id);
+                    send_mail($connect, $order_id, 'order_keep');
                     file_put_contents(__DIR__ . '/../error-api.txt', "keeped-$track\n", FILE_APPEND);
-                    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                 }
             }
         }
     }
 }
 
+foreach ($orders_add_mails as $mail) {
+    $type = $mail['type_mail'];
+    $order_id = $mail['order_id'];
+    $date = $mail['date'];
+    mysqli_query($connect, "UPDATE `orders_mail` SET `date`='$date' WHERE `type` = '$type' AND `id_order` = $order_id`");
+}
 

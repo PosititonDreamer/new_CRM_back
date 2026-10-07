@@ -23,7 +23,12 @@ if($status == 6) {
 
     $response = " SELECT  `orders`.`full_name`,orders.id,`orders`.`delivered`,`orders`.`keeped`, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
 } else if ($status == 0) {
-    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `id_order_status` = 4 AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)";
+    $orders_delivered = mysqli_query($connect, "SELECT DISTINCT `orders_mail`.`id_order` FROM `orders_mail` JOIN `orders` ON `orders`.`id` = `orders_mail`.`id_order` WHERE `orders`.`id_order_status` = 4");
+    $ids = [];
+    while ($orders_item = mysqli_fetch_assoc($orders_delivered)) {
+        $ids[] = $orders_item['id_order'];
+    }
+    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.id IN (" . join(', ', $ids) . ")";
 }else {
     $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
 }
