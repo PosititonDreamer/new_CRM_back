@@ -9,9 +9,9 @@ require_once __DIR__ . "/../helpers/check_messages.php";
 $status = $_GET['status'];
 
 if($status == 6) {
-    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 7)";
+    $response = "SELECT `orders`.`full_name`,`orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 7)";
 } elseif($status == 3) {
-    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 3)";
+    $response = "SELECT `orders`.`full_name`,`orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  (`id_order_status` = 6) OR (`id_order_status` = 3)";
 } elseif($status == 4) {
     $find_status = $_GET['find_status'];
 
@@ -21,16 +21,16 @@ if($status == 6) {
         $find_text = '(id_order_status = 2 OR id_order_status = 6 OR id_order_status = 7)';
     }
 
-    $response = " SELECT  `orders`.`full_name`,orders.id,`orders`.`delivered`,`orders`.`keeped`, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
+    $response = " SELECT  `orders`.`full_name`,orders.id, orders.id_warehouse, orders.id_client, orders.id_client_address, orders.id_order_status, orders.track, orders.number, orders.comment, clients_address.delivery, op.date AS date FROM orders JOIN clients_address  ON clients_address.id = orders.id_client_address JOIN ( SELECT id_order, MAX(date) AS date FROM orders_process WHERE $find_text GROUP BY id_order ) op  ON op.id_order = orders.id WHERE orders.id_order_status = $status ";
 } else if ($status == 0) {
     $orders_delivered = mysqli_query($connect, "SELECT DISTINCT `orders_mail`.`id_order` FROM `orders_mail` JOIN `orders` ON `orders`.`id` = `orders_mail`.`id_order` WHERE `orders`.`id_order_status` = 4");
     $ids = [];
     while ($orders_item = mysqli_fetch_assoc($orders_delivered)) {
         $ids[] = $orders_item['id_order'];
     }
-    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.id IN (" . join(', ', $ids) . ")";
+    $response = "SELECT `orders`.`full_name`,`orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.id IN (" . join(', ', $ids) . ")";
 }else {
-    $response = "SELECT `orders`.`full_name`,`orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
+    $response = "SELECT `orders`.`full_name`,`orders`.`id`, `orders`.`id_warehouse`, `orders`.`id_client`, `orders`.`id_client_address`, `orders`.`id_order_status`, `orders`.`track`, `orders`.`number`, `orders`.`comment`, `orders`.`date`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE  `id_order_status` = $status";
 }
 
 
@@ -90,6 +90,8 @@ while ($item = mysqli_fetch_assoc($list)) {
     $client_id = $item['id_client'];
     $delivery = $item['delivery'];
     $status = $item['id_order_status'];
+    $keep = mysqli_query($connect, "SELECT * FROM `orders_mail` WHERE `id_order` = $id AND `type` = 'order_keep'");
+    $delivered = mysqli_query($connect, "SELECT * FROM `orders_mail` WHERE `id_order` = $id AND `type` = 'order_delivered'");
 
     $length_goods = mysqli_query($connect, "SELECT * FROM `orders_good` WHERE `id_order` = $id");
     $length_goods = mysqli_num_rows($length_goods);
@@ -130,8 +132,8 @@ while ($item = mysqli_fetch_assoc($list)) {
         "status" => $status,
         "goods" => $length_goods,
         "orders" => $length_orders,
-        "keeped" => $item['keeped'] == 1,
-        "delivered" => $item['delivered'] == 1,
+        "keeped" => mysqli_num_rows($keep) == 0,
+        "delivered" => mysqli_num_rows($delivered) == 0,
         "quantity" => $quantity['quantity'],
         "blank" => file_exists(__DIR__ . "/../../files/$id.pdf")
     ];

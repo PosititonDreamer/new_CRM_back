@@ -9,7 +9,6 @@ require_once __DIR__ . "/../helpers/check_messages.php";
 $order_id = $_POST['id'];
 
 mysqli_query($connect, "DELETE FROM `orders_mail` WHERE `id_order` = $order_id ");
-mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
 
 $req = [
     'messages' => ['Данные заказа успешно изменены'],

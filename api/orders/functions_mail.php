@@ -767,12 +767,6 @@ function send_mail($connect, $order_id, $type_mail) {
         $theme = $info['theme'];
         $message = $info['message'];
         $message_archive = $info['add_message_for_archive'];
-        if($type_mail == 'order_delivered') {
-            mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1 WHERE `id` = $order_id");
-        }
-        if($type_mail == 'order_keep') {
-            mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
-        }
         try {
             if($type_mail == 'order_create' || $type_mail == 'order_send' || $type_mail == 'order_delivered' || $type_mail == 'order_keep') {
                 $mail = new PHPMailer(true);

@@ -8,8 +8,17 @@ $interval_7 = new DateInterval('P7D');
 $interval_21 = new DateInterval('P21D');
 $interval_30 = new DateInterval('P30D');
 
+$orders_delivered = mysqli_query($connect, "SELECT DISTINCT `orders_mail`.`id_order` FROM `orders_mail` JOIN `orders` ON `orders`.`id` = `orders_mail`.`id_order` WHERE `orders`.`id_order_status` = 4");
+$ids = [];
+
+while ($orders_item = mysqli_fetch_assoc($orders_delivered)) {
+    $ids[] = $orders_item['id_order'];
+}
+
+$add_where = "`orders`.id IN (" . join(', ', $ids) . ")";
+
 // todo:: CDEK
-$orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`track`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND `clients_address`.`delivery` = 'CDEK' AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)");
+$orders = mysqli_query($connect, "SELECT `orders`.`id`, `orders`.`track`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND `clients_address`.`delivery` = 'CDEK' AND $add_where");
 
 if(mysqli_num_rows($orders) > 0){
     $array = array();
@@ -89,7 +98,7 @@ if(mysqli_num_rows($orders) > 0){
                 }
 
 
-                if($order['delivered'] == 0 && $days > 3) {
+                if($days > 3) {
                     send_mail($connect, $order_id, 'order_delivered');
                     $start = new DateTime("$date");
                     $orders_add_mails[] = [
@@ -100,7 +109,7 @@ if(mysqli_num_rows($orders) > 0){
                     continue;
                 }
 
-                if($order['keeped'] == 0 && $days <= 3) {
+                if($days <= 3) {
                     send_mail($connect, $order_id, 'order_keep');
                 }
             }
@@ -141,7 +150,7 @@ if (mysqli_num_rows($orders_not_number) > 0) {
     }
 }
 
-$orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`track`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`number`,`orders`.`request_id`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND (`clients_address`.`delivery` = '5post(Пятерочка)' OR `clients_address`.`delivery` = 'Яндекс Доставка') AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)");
+$orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`track`, `orders`.`number`,`orders`.`request_id`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND (`clients_address`.`delivery` = '5post(Пятерочка)' OR `clients_address`.`delivery` = 'Яндекс Доставка') AND $add_where");
 
 if (mysqli_num_rows($orders) > 0) {
     $date = date("Y-m-d");
@@ -221,7 +230,7 @@ if (mysqli_num_rows($orders) > 0) {
                         $days++;
                     }
 
-                    if ($order['delivered'] == 0 && $days > 3) {
+                    if ($days > 3) {
                         send_mail($connect, $order_id, 'order_delivered');
                         $start = new DateTime("$date");
                         $orders_add_mails[] = [
@@ -232,13 +241,12 @@ if (mysqli_num_rows($orders) > 0) {
                         continue;
                     }
 
-                    if ($order['keeped'] == 0 && $days <= 3) {
+                    if ($days <= 3) {
                         send_mail($connect, $order_id, 'order_keep');
                     }
                 }
             }
         } else {
-            mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
             mysqli_query($connect, "DELETE FROM `orders_mail` WHERE `id_order` = $order_id ");
         }
     }
@@ -260,7 +268,7 @@ function objectToArray($data)
 }
 
 
-$orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`delivered`,`orders`.`keeped`, `orders`.`track`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND `clients_address`.`delivery` = 'Почта России' AND (`orders`.`delivered` = 0 OR `orders`.`keeped` = 0)");
+$orders = mysqli_query($connect, "SELECT `orders`.`id`,`orders`.`track`, `clients_address`.`delivery` FROM `orders` JOIN `clients_address` ON `clients_address`.`id` = `orders`.`id_client_address` WHERE `orders`.`id_order_status` = 4 AND `clients_address`.`delivery` = 'Почта России' AND $add_where");
 
 if (mysqli_num_rows($orders) > 0) {
     $login = 'SGOaAaoFEHHfOg';
@@ -357,7 +365,6 @@ if (mysqli_num_rows($orders) > 0) {
                 $description = $lastOperation['OperationParameters']['OperAttr']['Name'];
 
                 if ($name == 'Возврат' || $name == 'Вручение') {
-                    mysqli_query($connect, "UPDATE `orders` SET `delivered`= 1, `keeped`= 1 WHERE `id` = $order_id");
                     file_put_contents(__DIR__ . '/../error-api.txt', "confirm-$track\n", FILE_APPEND);
                     file_put_contents(__DIR__ . '/../data_post-api.txt', print_r($operation['OperationParameters']['OperType'], true), FILE_APPEND);
 
@@ -388,7 +395,7 @@ if (mysqli_num_rows($orders) > 0) {
                     } else {
                         send_mail($connect, $order_id, 'order_back');
                     }
-                } else if ($order['delivered'] == 0 && $name == 'Обработка' &&  ($description == 'Прибыло в место вручения' || $description == 'Прибыло в почтомат')) {
+                } else if ($name == 'Обработка' &&  ($description == 'Прибыло в место вручения' || $description == 'Прибыло в почтомат')) {
                     send_mail($connect, $order_id, 'order_delivered');
                     file_put_contents(__DIR__ . '/../error-api.txt', "delivered-$track\n", FILE_APPEND);
                     $date = date("Y-m-d");
@@ -399,9 +406,8 @@ if (mysqli_num_rows($orders) > 0) {
                         'type_mail' => 'order_after_1_days_delivered',
                         'date' => $start->add($interval)->format('Y-m-d')
                     ];
-                } else if ($order['keeped'] == 0 && $name == 'Обработка' && str_contains($description, 'Истекает срок хранения')) {
+                } else if ($name == 'Обработка' && str_contains($description, 'Истекает срок хранения')) {
                     send_mail($connect, $order_id, 'order_keep');
-                    file_put_contents(__DIR__ . '/../error-api.txt', "keeped-$track\n", FILE_APPEND);
                 }
             }
         }
