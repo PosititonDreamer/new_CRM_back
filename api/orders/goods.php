@@ -16,12 +16,16 @@ $boxes = mysqli_query($connect, "SELECT * FROM `goods_other` WHERE `id_good_othe
 $sales = mysqli_query($connect, "SELECT * FROM `sales` WHERE `date` >= '$date' AND `date_start` <= '$date'");
 $old_sales = mysqli_query($connect, "SELECT * FROM `sales` WHERE `date` < '$date'");
 $presents = mysqli_query($connect, "SELECT `presents`.`id`, `presents`.`id_product_packing`,`products_packing`.`packing`, `products`.`title`, `products`.`show_title`, `measure_units`.`title` AS `measure` FROM `presents` JOIN `products_packing` ON `products_packing`.`id` = `presents`.`id_product_packing` JOIN `products` ON `products`.`id` = `products_packing`.`id_product` JOIN `measure_units` ON `measure_units`.`id` = `products`.`id_measure_unit` ORDER BY `products`.`sort` ASC");
+$multy_sales = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id_sale_multy` = $id AND `date_end` >= '$date'");
+$multy_sales_closed = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id_sale_multy` = $id AND `date_end` < '$date'");
 
 $products_list = [];
 $goods_list = [];
 $kits_list = [];
 $boxes_list = [];
 $sales_list = [];
+$sales_multy_list = [];
+
 $presents_list = [
     [
         "id" => 1,
@@ -98,6 +102,34 @@ while ($sale = mysqli_fetch_assoc($old_sales)) {
     ];
 }
 
+while ($multy_item = mysqli_fetch_assoc($multy_sales)) {
+    $sales_multy_list[] = [
+        "id" => $multy_item['id'],
+        "sale_multy" => $multy_item['id_sale_multy'],
+        "good" => $multy_item['id_good'],
+        "code" => $multy_item['code'],
+        "used" => $multy_item['used'] == 1,
+        "quantity" => $multy_item['quantity'],
+        "denied" => false,
+        "date_start" => $multy_item['date_start'],
+        "date_end" => $multy_item['date_end'],
+    ];
+}
+
+while ($multy_item = mysqli_fetch_assoc($multy_sales_closed)) {
+    $sales_multy_list[] = [
+        "id" => $multy_item['id'],
+        "sale_multy" => $multy_item['id_sale_multy'],
+        "good" => $multy_item['id_good'],
+        "code" => $multy_item['code'],
+        "used" => $multy_item['used'] == 1,
+        "quantity" => $multy_item['quantity'],
+        "denied" => true,
+        "date_start" => $multy_item['date_start'],
+        "date_end" => $multy_item['date_end'],
+    ];
+}
+
 $req = [
     "messages" => ['Список данных для заказа успешно получен'],
     "products_list" => $products_list,
@@ -105,7 +137,8 @@ $req = [
     "kits_list" => $kits_list,
     "presents_list" => $presents_list,
     "boxes_list" => $boxes_list,
-    "sales_list" => $sales_list,
+    "sales_multy_list" => $sales_multy_list,
+
 ];
 http_response_code(200);
 echo json_encode($req);

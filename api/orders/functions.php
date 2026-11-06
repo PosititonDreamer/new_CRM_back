@@ -2,6 +2,22 @@
 require_once __DIR__ . "/../connect.php";
 
 function forming_instructions($connect, $order_id) {
+    $client = mysqli_query($connect, "SELECT * FROM orders WHERE id = $order_id");
+    $client = mysqli_fetch_assoc($client)['id_client'];
+    $orders_client = mysqli_query($connect, "SELECT `id` FROM `orders` WHERE id_client = $client AND `id` < $order_id");
+    $old_products = [];
+
+    while ($old_order_id = mysqli_fetch_assoc($orders_client)) {
+        $old_good = mysqli_query($connect, "SELECT `id_product` FROM `orders_good` WHERE `id_order` = $old_order_id AND `id_order_good_type` = 1");
+        $old_good_id = $old_good['id_good'];
+        $good_item = mysqli_query($connect, "SELECT `id_product` FROM `goods` WHERE `id` = $old_good_id");
+        if(mysqli_num_rows($good_item) > 0) {
+            $old_products[] = mysqli_fetch_assoc($good_item)['id_product'];
+        }
+    }
+
+    $old_products = array_unique($old_products);
+
     $goods = mysqli_query($connect, "SELECT * FROM `orders_good` WHERE `id_order` = '$order_id' AND `id_order_good_type` = 1");
 
     if(mysqli_num_rows($goods) > 0) {
@@ -13,25 +29,43 @@ function forming_instructions($connect, $order_id) {
                 $products[] = mysqli_fetch_assoc($good_item)['id_product'];
             }
         }
-        $products = array_unique($products);
-        if(count($products) > 0) {
-            $products = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` IN (" . join(', ', $products) . ") ORDER BY `products`.`sort` ASC");
-            $final_instruction = '';
 
-            while($product = mysqli_fetch_assoc($products)) {
-                if(!empty($product['instruction'])) {
-                    $title = $product['client_title'];
-                    $instruction = $product['instruction'];
-                    $final_instruction .= "<b>$title</b><br>$instruction<br><br>";
-                }
+        $current_products = array_unique($products);
+        $new_products = array_diff($products, $old_products);
+        $old_products = array_intersect($current_products, $old_products);
+        $result = [
+            'current_instructions' => '',
+            'new_instructions' => '',
+            'old_instructions' => '',
+        ];
+        $products = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` IN (" . join(', ', $products) . ") ORDER BY `products`.`sort` ASC");
+        while ($product = mysqli_fetch_assoc($products)) {
+            if (!empty($product['instruction'])) {
+                $title = $product['client_title'];
+                $instruction = nl2br($product['instruction']);
+                $result['current_instructions'] .= "<b>$title</b><br>$instruction<br><br>";
             }
-            if(!empty(trim($final_instruction))) {
-                return $final_instruction;
-            }
-
-            return null;
         }
-        return null;
+
+        $products = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` IN (" . join(', ', $new_products) . ") ORDER BY `products`.`sort` ASC");
+        while ($product = mysqli_fetch_assoc($products)) {
+            if (!empty($product['instruction'])) {
+                $title = $product['client_title'];
+                $instruction = nl2br($product['instruction']);
+                $result['new_instructions'] .= "<b>$title</b><br>$instruction<br><br>";
+            }
+        }
+
+        $products = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` IN (" . join(', ', $old_products) . ") ORDER BY `products`.`sort` ASC");
+        while ($product = mysqli_fetch_assoc($products)) {
+            if (!empty($product['instruction'])) {
+                $title = $product['client_title'];
+                $instruction = nl2br($product['instruction']);
+                $result['old_instructions'] .= "<b>$title</b><br>$instruction<br><br>";
+            }
+        }
+
+        return $result;
     }
     return null;
 }

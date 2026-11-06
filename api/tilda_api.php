@@ -110,8 +110,32 @@ foreach ($info['products'] as $product) {
         continue;
     }
 
-    if(isset($product['options'][1])) {
-        $name .= " - " . mb_strtolower($product['options'][1]['variant']);
+    if($product['name'] == 'Чага уральская крошка/кусочки') {
+        $explode_variant = explode(", ", $product['options'][0]['variant']);
+        $quantity_good = intval(explode(" ", $explode_variant[1])[0]);
+        $products[] = [
+            "title" =>  $name . " - " . $explode_variant[0],
+            "quantity" => $quantity,
+            "quantity_good" => $quantity_good,
+            "type" => 'good',
+            "present" => 0
+        ];
+
+        continue;
+    }
+
+    if($product['name'] == 'Цветочная пыльца капсулы/россыпь') {
+        $explode_variant = explode(" ", $product['options'][0]['variant']);
+        $quantity_good = intval($explode_variant[0]);
+        $products[] = [
+            "title" =>  "$name - " . ($explode_variant[1] == 'грамм' ? 'россыпь' : 'капсулы'),
+            "quantity" => $quantity,
+            "quantity_good" => $quantity_good,
+            "type" => 'good',
+            "present" => 0
+        ];
+
+        continue;
     }
 
     $quantity_good = intval(explode(" ", $product['options'][0]['variant'])[0]);
@@ -337,7 +361,7 @@ if(mysqli_num_rows($client_item) > 0) {
     $address = $address_id;
 }
 
-mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `full_name`) VALUES ($warehouse,$client,$address,3,'$track','$number','$comment','$date', '$full_name')");
+mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `full_name`, `price`) VALUES ($warehouse,$client,$address,3,'$track','$number','$comment','$date', '$full_name', '$amount')");
 $order_id = mysqli_insert_id($connect);
 
 
@@ -351,6 +375,18 @@ while($sale = mysqli_fetch_assoc($sales)) {
         'type' => 'sale'
     ];
 }
+$sales_multy = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE '$comment' LIKE CONCAT('%', `code`, '%') AND `date_start` <= '$date' AND `date_end` >= '$date' AND `sum` <= '$amount' AND `used` = 0 ORDER BY `sales_multy_list`.`sum` DESC LIMIT 1");
+if($sales_multy) {
+    $multy_sale = mysqli_fetch_assoc($sales_multy);
+    $goods[] = [
+        'good' => $multy_sale['id'],
+        'quantity' => 1,
+        'present' => 0,
+        'type' => 'sale_multy'
+    ];
+}
+
+
 
 foreach ($goods as $comp) {
     $good = $comp['good'];
@@ -406,6 +442,17 @@ foreach ($goods as $comp) {
             $count = $item_quantity * $quantity;
             mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$count,0)");
         }
+    }
+
+    if($type == 'sale_multy') {
+        mysqli_query($connect, "INSERT INTO `orders_composition`(`id_order`, `id_good`, `id_order_composition_type`, `quantity`, `present`) VALUES ($order_id,$good,5,$quantity,0)");
+        $code = $multy_sale['code'];
+        $kit_list = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id` = $good");
+        $item = mysqli_fetch_assoc($kit_list);
+        $good_id = $item['id_good'];
+        $item_quantity = $item['quantity'];
+        mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$item_quantity,0)");
+        mysqli_query($connect, "UPDATE `sales_multy_list` SET `used`= 1 WHERE `code` = '$code'");
     }
 
     if($type == 'other') {

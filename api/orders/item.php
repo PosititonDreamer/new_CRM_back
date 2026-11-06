@@ -19,6 +19,7 @@ $comment = $order['comment'];
 $site_comment = '';
 $number = $order['number'];
 $full_name = $order['full_name'];
+$price = $order['price'];
 
 $new_status_list = [];
 $new_composition_list = [];
@@ -55,6 +56,10 @@ while ($composition = mysqli_fetch_assoc($composition_list)) {
 
     if ($composition['id_order_composition_type'] == 4) {
         $type = "sale";
+    }
+
+    if ($composition['id_order_composition_type'] == 5) {
+        $type = "sale_multy";
     }
 
     $new_composition_list[] = [
@@ -136,6 +141,7 @@ $req = [
             "address" => $address['address'],
             "delivery" => $address['delivery'],
         ],
+        "price" => $price,
         "assembler" => '',
         "creator" => '',
         "payed" => is_null($order['number']) ? 0 : 1

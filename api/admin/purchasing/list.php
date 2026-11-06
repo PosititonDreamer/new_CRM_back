@@ -51,9 +51,7 @@ foreach($goods as $good){
     $product_id = $good_item['id_product'];
     $product = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` = $product_id");
     $product = mysqli_fetch_assoc($product);
-    $measure_id = $product['id_measure_unit'];
-    $measure = mysqli_query($connect, "SELECT * FROM `measure_units` WHERE `id` = $measure_id");
-    $measure = mysqli_fetch_assoc($measure);
+
 
     if($good_item['weight'] == 1) {
         $warehouse = $good_item['id_warehouse'];
@@ -74,7 +72,6 @@ foreach($goods as $good){
                 $product = mysqli_query($connect, "SELECT * FROM `products` WHERE `id` = $product_id");
                 $product = mysqli_fetch_assoc($product);
 
-
                 if(isset($products[$product_id])){
                     if(isset($products[$product_id]["expense_composite"])) {
                         $products[$product_id]["expense_composite"] += $product['weight'] * $good_item['quantity'] * $quantity / 100 * $proportion;
@@ -86,8 +83,7 @@ foreach($goods as $good){
                         'id' => $product_id,
                         "title" => $product['show_title'] ? $product['show_title'] : $product['title'],
                         "expense" => 0,
-                        "expense_composite" => $product['weight'] * $good_item['quantity'] * $quantity / 100 * $proportion,
-                        "measure" => $measure['title'],
+                        "expense_composite" => $product['weight'] * $good_item['quantity'] * $quantity / 100 * $proportion
                     ];
                 }
             }
@@ -102,7 +98,6 @@ foreach($goods as $good){
             'id' => $product_id,
             "title" => $product['show_title'] ? $product['show_title'] : $product['title'],
             "expense" => $product['weight'] * $good_item['quantity'] * $quantity,
-            "measure" => $measure['title'],
         ];
     }
 }

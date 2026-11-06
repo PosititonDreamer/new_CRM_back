@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../connect.php";
 require_once __DIR__ . "/../helpers/check_data.php";
 
-$messages = check_data(['id', 'warehouse', 'client', 'phone', 'address', 'delivery', 'track', 'composition'], $_POST);
+$messages = check_data(['id', 'warehouse', 'client', 'phone', 'address', 'delivery', 'track', 'composition', 'price'], $_POST);
 
 require_once __DIR__ . "/../helpers/check_messages.php";
 require_once __DIR__ . '/../clients/functions.php';
@@ -19,31 +19,47 @@ $email = $_POST['email'];
 $date = date("Y-m-d");
 $time = date("H:i:s");
 $composition = json_decode($_POST['composition'], true);
+$price = $_POST['price'];
 
+if(!empty($_POST['code'])) {
+    $code = $_POST['code'];
+    $sales_multy = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE '$code' LIKE CONCAT('%', `code`, '%') AND `date_start` <= '$date' AND `date_end` >= '$date' AND `sum` <= '$price' AND `used` = 0 ORDER BY `sales_multy_list`.`sum` DESC LIMIT 1");
+    if(mysqli_num_rows($sales_multy) > 0) {
+        $multy_sale = mysqli_fetch_assoc($sales_multy);
+        $composition[] = [
+            'good' => $multy_sale['id'],
+            'quantity' => 1,
+            'present' => 0,
+            'type' => 'sale_multy'
+        ];
+    }
+}
 $client_item = mysqli_query($connect, generate_request($full_name, $phone, $email));
-if(mysqli_num_rows($client_item) > 0) {
-    $client_item = mysqli_fetch_assoc($client_item);
-    $client_id = $client_item['id'];
-    $client = $client_id;
+if(mysqli_num_rows($client_item) == 0) {
+    $client_item = mysqli_query($connect, "SELECT * FROM `clients` WHERE `full_name` LIKE '%$full_name%'");
+}
 
-    if(!empty($phone) && empty($client_item['phone'])) {
-        mysqli_query($connect, "UPDATE `clients` SET `phone`='$phone' WHERE `id` = $client_id");
-    }
+$client_item = mysqli_fetch_assoc($client_item);
+$client_id = $client_item['id'];
+$client = $client_id;
 
-    if(!empty($email) && empty($client_item['email'])) {
-        mysqli_query($connect, "UPDATE `clients` SET `email`='$email' WHERE `id` = $client_id");
-    }
+if(!empty($phone) && empty($client_item['phone'])) {
+    mysqli_query($connect, "UPDATE `clients` SET `phone`='$phone' WHERE `id` = $client_id");
+}
 
-    $address_item = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id_client`=$client_id AND `delivery` = '$delivery' AND `address`='$address'");
-    if(mysqli_num_rows($address_item) > 0) {
-        $address_item = mysqli_fetch_assoc($address_item);
-        $address_id = $address_item['id'];
-        $address = $address_id;
-    } else {
-        mysqli_query($connect, "INSERT INTO `clients_address`(`id_client`, `address`, `delivery`) VALUES ($client_id,'$address','$delivery')");
-        $address_id = mysqli_insert_id($connect);
-        $address = $address_id;
-    }
+if(!empty($email) && empty($client_item['email'])) {
+    mysqli_query($connect, "UPDATE `clients` SET `email`='$email' WHERE `id` = $client_id");
+}
+
+$address_item = mysqli_query($connect, "SELECT * FROM `clients_address` WHERE `id_client`=$client_id AND `delivery` = '$delivery' AND `address`='$address'");
+if(mysqli_num_rows($address_item) > 0) {
+    $address_item = mysqli_fetch_assoc($address_item);
+    $address_id = $address_item['id'];
+    $address = $address_id;
+} else {
+    mysqli_query($connect, "INSERT INTO `clients_address`(`id_client`, `address`, `delivery`) VALUES ($client_id,'$address','$delivery')");
+    $address_id = mysqli_insert_id($connect);
+    $address = $address_id;
 }
 
 $order = mysqli_query($connect, "SELECT * FROM `orders` WHERE `id`=$order_id");
@@ -109,12 +125,23 @@ if($order['id_order_status'] == 2) {
 if($_POST['payed'] == 'true') {
     $order_number = $order['number'];
     if(empty($order_number)) {
-        mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = -1 WHERE `id` = $order_id");
+        mysqli_query($connect, "UPDATE `orders` SET `price`='$price', `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = -1 WHERE `id` = $order_id");
     } else {
-        mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment' WHERE `id` = $order_id");
+        mysqli_query($connect, "UPDATE `orders` SET `price`='$price', `full_name`= '$full_name', `id_client_address`='$address',`id_order_status`=1,`track`='$track',`comment`='$comment' WHERE `id` = $order_id");
     }
 } else {
-    mysqli_query($connect, "UPDATE `orders` SET `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = NULL WHERE `id` = $order_id");
+    mysqli_query($connect, "UPDATE `orders` SET `price`='$price', `full_name`= '$full_name', `id_client_address`=$address,`id_order_status`=1,`track`='$track',`comment`='$comment', `number` = NULL WHERE `id` = $order_id");
+}
+
+$check_multy = mysqli_query($connect, "SELECT * FROM `orders_composition` WHERE `id_order` = $order_id AND `id_order_composition_type` = 5");
+if(mysqli_num_rows($check_multy) > 0) {
+    while ($item = mysqli_fetch_assoc($check_multy)) {
+        $sale_id = $item['id_good'];
+        $sale_multy = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id` = $sale_id");
+        $sale_multy = mysqli_fetch_assoc($sale_multy);
+        $code = $sale_multy['code'];
+        mysqli_query($connect, "UPDATE `sales_multy_list` SET `used`=0 WHERE `code` = '$code'");
+    }
 }
 
 mysqli_query($connect, "DELETE FROM `orders_composition` WHERE `id_order` = $order_id");
@@ -177,6 +204,19 @@ foreach ($composition as $comp) {
             $item_quantity = $item['quantity'];
             $count = $item_quantity * $quantity;
             mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$count,0)");
+        }
+    }
+
+    if($type == 'sale_multy') {
+        mysqli_query($connect, "INSERT INTO `orders_composition`(`id_order`, `id_good`, `id_order_composition_type`, `quantity`, `present`) VALUES ($order_id,$good,5,$quantity,0)");
+        $kit_list = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id` = $good");
+        if(mysqli_num_rows($kit_list) > 0) {
+            $item = mysqli_fetch_assoc($kit_list);
+            $code = $item['code'];
+            $good_id = $item['id_good'];
+            $item_quantity = $item['quantity'];
+            mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$item_quantity,0)");
+            mysqli_query($connect, "UPDATE `sales_multy_list` SET `used`= 1 WHERE `code` = '$code'");
         }
     }
 

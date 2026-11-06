@@ -25,6 +25,21 @@ $time = date("H:i:s");
 $composition = json_decode($_POST['composition'], true);
 $phone = mb_eregi_replace('[^0-9]', '', $phone);
 $worker = $_POST['worker'];
+$price = $_POST['price'] ?? 0;
+
+if(!empty($_POST['code'])) {
+    $code = $_POST['code'];
+    $sales_multy = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE '$code' LIKE CONCAT('%', `code`, '%') AND `date_start` <= '$date' AND `date_end` >= '$date' AND `sum` <= '$price' AND `used` = 0 ORDER BY `sales_multy_list`.`sum` DESC LIMIT 1");
+    if(mysqli_num_rows($sales_multy) > 0) {
+        $multy_sale = mysqli_fetch_assoc($sales_multy);
+        $composition[] = [
+            'good' => $multy_sale['id'],
+            'quantity' => 1,
+            'present' => 0,
+            'type' => 'sale_multy'
+        ];
+    }
+}
 
 if(strpos($phone, "8") == 0) {
     $phone = "7".substr($phone, 1);
@@ -78,9 +93,9 @@ if(mysqli_num_rows($client_item) > 0) {
     $address = $address_id;
 }
 if($number == -1) {
-    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `id_worker`, `full_name`) VALUES ($warehouse,$client,$address,1,'$track','$number','$comment','$date',$worker, '$full_name')");
+    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `number`, `comment`, `date`, `id_worker`, `full_name`, `price`) VALUES ($warehouse,$client,$address,1,'$track','$number','$comment','$date',$worker, '$full_name', '$price')");
 } else {
-    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `comment`, `date`, `id_worker`, `full_name`) VALUES ($warehouse,$client,$address,1,'$track','$comment','$date',$worker, '$full_name')");
+    mysqli_query($connect, "INSERT INTO `orders`(`id_warehouse`, `id_client`, `id_client_address`, `id_order_status`, `track`, `comment`, `date`, `id_worker`, `full_name`, `price`) VALUES ($warehouse,$client,$address,1,'$track','$comment','$date',$worker, '$full_name', '$price')");
 }
 $sale = false;
 $order_id = mysqli_insert_id($connect);
@@ -138,6 +153,19 @@ foreach ($composition as $comp) {
             $item_quantity = $item['quantity'];
             $count = $item_quantity * $quantity;
             mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$count,0)");
+        }
+    }
+
+    if($type == 'sale_multy') {
+        mysqli_query($connect, "INSERT INTO `orders_composition`(`id_order`, `id_good`, `id_order_composition_type`, `quantity`, `present`) VALUES ($order_id,$good,5,$quantity,0)");
+        $kit_list = mysqli_query($connect, "SELECT * FROM `sales_multy_list` WHERE `id` = $good");
+        if(mysqli_num_rows($kit_list) > 0) {
+            $item = mysqli_fetch_assoc($kit_list);
+            $code = $item['code'];
+            $good_id = $item['id_good'];
+            $item_quantity = $item['quantity'];
+            mysqli_query($connect, "INSERT INTO `orders_good`( `id_order`, `id_good`, `id_order_good_type`, `quantity`, `ready`) VALUES ($order_id,$good_id,1,$item_quantity,0)");
+            mysqli_query($connect, "UPDATE `sales_multy_list` SET `used`= 1 WHERE `code` = '$code'");
         }
     }
 
